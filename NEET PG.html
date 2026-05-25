@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEET PG 2026 — Mission: Sub 1000</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080c14;--bg2:#0d1421;--panel:#0f1a2e;--panel2:#162035;--border:rgba(0,212,255,0.15);--border2:rgba(0,212,255,0.35);--cyan:#00d4ff;--gold:#ffd700;--green:#00ff88;--red:#ff4455;--orange:#ff8c00;--purple:#b44fff;--text:#e8f4fd;--text2:#7a9cbf;--text3:#4a6a8a;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);pointer-events:none;z-index:9999;}
+body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+.wrap{position:relative;z-index:1;}
+.hud{position:sticky;top:0;z-index:100;background:rgba(8,12,20,0.97);backdrop-filter:blur(10px);border-bottom:1px solid var(--border2);padding:0 14px;}
+.hud-inner{max-width:1600px;margin:0 auto;display:flex;align-items:center;gap:10px;height:56px;}
+.logo{font-family:'Orbitron',monospace;font-size:11px;font-weight:900;color:var(--cyan);text-shadow:0 0 20px rgba(0,212,255,0.4);letter-spacing:2px;white-space:nowrap;cursor:pointer;}
+.hud-stats{display:flex;gap:3px;flex:1;}
+.hs{flex:1;display:flex;flex-direction:column;align-items:center;padding:4px 5px;border:1px solid var(--border);border-radius:5px;background:var(--panel);}
+.hs-v{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;}
+.hs-l{font-size:8px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-top:1px;}
+.xp-wrap{flex:2;display:flex;flex-direction:column;gap:3px;}
+.xp-lbl{display:flex;justify-content:space-between;font-size:9px;color:var(--text2);font-family:'Share Tech Mono',monospace;}
+.xp-track{height:7px;background:rgba(255,255,255,0.05);border-radius:4px;border:1px solid var(--border);overflow:hidden;}
+.xp-fill{height:100%;background:linear-gradient(90deg,#00aacc,var(--cyan));border-radius:4px;transition:width 0.8s ease;}
+.streak{display:flex;align-items:center;gap:5px;background:rgba(255,140,0,0.1);border:1px solid rgba(255,140,0,0.3);border-radius:6px;padding:4px 10px;white-space:nowrap;}
+.streak-n{font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:var(--orange);}
+.streak-l{font-size:8px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;}
+.main{max-width:1600px;margin:0 auto;padding:14px;display:grid;grid-template-columns:255px 1fr 310px;gap:12px;align-items:start;}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:10px;overflow:hidden;position:relative;}
+.panel::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);opacity:0.5;}
+.ph{padding:10px 13px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:rgba(0,0,0,0.2);}
+.pt{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);}
+.ps{font-size:9px;color:var(--text3);font-family:'Share Tech Mono',monospace;}
+.mscroll{max-height:calc(100vh - 195px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border2) transparent;}
+.phase-h{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:9px 13px 3px;}
+.mi{padding:7px 13px;cursor:pointer;display:flex;align-items:center;gap:7px;transition:all 0.15s;border-left:2px solid transparent;}
+.mi:hover{background:rgba(0,212,255,0.05);border-left-color:#00aacc;}
+.mi.active{background:rgba(0,212,255,0.1);border-left-color:var(--cyan);}
+.mi.done{border-left-color:var(--green);}
+.mi.rest-d{border-left-color:var(--purple);}
+.mdot{width:7px;height:7px;border-radius:50%;border:1.5px solid var(--text3);flex-shrink:0;transition:all 0.3s;}
+.mi.active .mdot{border-color:var(--cyan);background:var(--cyan);box-shadow:0 0 7px rgba(0,212,255,0.5);}
+.mi.done .mdot{border-color:var(--green);background:var(--green);}
+.mi.rest-d .mdot{border-color:var(--purple);}
+.mn{font-size:11px;font-weight:500;font-family:'Rajdhani',sans-serif;letter-spacing:0.5px;}
+.ms{font-size:9px;color:var(--text3);margin-top:1px;}
+.mp{font-family:'Share Tech Mono',monospace;font-size:10px;margin-left:auto;color:var(--text2);}
+.wgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;padding:10px;}
+.wday{aspect-ratio:1;border-radius:6px;border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all 0.15s;font-family:'Share Tech Mono',monospace;}
+.wday:hover{border-color:var(--cyan);transform:scale(1.06);}
+.wday.today{border-color:var(--cyan);background:rgba(0,212,255,0.12);box-shadow:0 0 10px rgba(0,212,255,0.2);}
+.wday.done{border-color:var(--green);background:rgba(0,255,136,0.08);}
+.wday.partial{border-color:var(--gold);background:rgba(255,215,0,0.06);}
+.wday.rest{border-color:rgba(180,79,255,0.4);background:rgba(180,79,255,0.06);}
+.wday.future{opacity:0.35;}
+.wn{font-size:12px;font-weight:700;line-height:1;}
+.wl{font-size:8px;color:var(--text3);margin-top:2px;}
+.wday.today .wl{color:var(--cyan);}
+.wday.done .wl{color:var(--green);}
+.dnav{display:flex;align-items:center;justify-content:space-between;padding:11px 14px 0;}
+.dnbtn{width:28px;height:28px;border:1px solid var(--border);background:var(--panel2);border-radius:5px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);font-size:13px;transition:all 0.2s;}
+.dnbtn:hover{border-color:var(--cyan);color:var(--cyan);}
+.di{text-align:center;}
+.dtitle{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;color:var(--gold);}
+.dsub{font-size:9px;color:var(--text3);margin-top:2px;font-family:'Share Tech Mono',monospace;}
+.dpw{padding:7px 14px 0;}
+.dpl{display:flex;justify-content:space-between;font-size:10px;color:var(--text3);font-family:'Share Tech Mono',monospace;margin-bottom:4px;}
+.dpb{height:5px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;border:1px solid var(--border);}
+.dpf{height:100%;background:linear-gradient(90deg,#00cc66,var(--green));border-radius:3px;transition:width 0.6s ease;box-shadow:0 0 6px rgba(0,255,136,0.4);}
+.objs{padding:10px;display:flex;flex-direction:column;gap:5px;}
+.oc{background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:9px 11px;display:flex;gap:9px;align-items:flex-start;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden;}
+.oc::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--text3);transition:all 0.3s;}
+.oc:hover{border-color:rgba(0,212,255,0.3);transform:translateX(2px);}
+.oc.done{background:rgba(0,255,136,0.04);border-color:rgba(0,255,136,0.2);}
+.oc.done::before{background:var(--green);box-shadow:0 0 8px rgba(0,255,136,0.5);}
+.oc.done .otxt{text-decoration:line-through;color:var(--text3);}
+.oc.rcard{background:rgba(180,79,255,0.04);border-color:rgba(180,79,255,0.2);cursor:default;}
+.oc.rcard::before{background:var(--purple);}
+.ochk{width:19px;height:19px;border-radius:4px;border:2px solid var(--text3);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.3s;margin-top:1px;}
+.oc.done .ochk{background:var(--green);border-color:var(--green);box-shadow:0 0 10px rgba(0,255,136,0.4);}
+.ochkm{color:var(--bg);font-size:10px;font-weight:700;opacity:0;transform:scale(0);transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);}
+.oc.done .ochkm{opacity:1;transform:scale(1);}
+.otxt{font-size:12px;line-height:1.5;transition:all 0.3s;flex:1;}
+.otags{display:flex;gap:3px;flex-wrap:wrap;margin-top:4px;}
+.otag{font-size:9px;padding:1px 6px;border-radius:10px;font-family:'Share Tech Mono',monospace;}
+.tv{background:rgba(255,68,85,0.12);color:var(--red);border:1px solid rgba(255,68,85,0.2);}
+.tm{background:rgba(255,215,0,0.1);color:var(--gold);border:1px solid rgba(255,215,0,0.2);}
+.tr{background:rgba(0,255,136,0.08);color:var(--green);border:1px solid rgba(0,255,136,0.2);}
+.tt{background:rgba(180,79,255,0.1);color:var(--purple);border:1px solid rgba(180,79,255,0.2);}
+.txp{font-family:'Orbitron',monospace;font-size:10px;font-weight:700;color:var(--gold);flex-shrink:0;margin-top:1px;}
+.mq-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:10px 11px 0;}
+.mq-f{display:flex;flex-direction:column;gap:3px;}
+.mq-l{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;}
+.mq-i{background:var(--bg2);border:1px solid var(--border);border-radius:5px;padding:7px 9px;color:var(--text);font-family:'Share Tech Mono',monospace;font-size:13px;width:100%;outline:none;transition:border-color 0.2s;}
+.mq-i:focus{border-color:var(--cyan);}
+.mq-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;padding:7px 11px;}
+.mq-s{background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:7px;text-align:center;}
+.mq-sv{font-family:'Orbitron',monospace;font-size:14px;}
+.mq-sl{font-size:8px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-top:2px;}
+.mq-ab{height:5px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;border:1px solid var(--border);margin:0 11px;}
+.mq-af{height:100%;border-radius:3px;transition:width 0.6s,background 0.6s;}
+.mq-al{font-size:10px;color:var(--text2);font-family:'Share Tech Mono',monospace;text-align:center;padding:3px 11px 0;}
+.btn{padding:8px 14px;border-radius:6px;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;cursor:pointer;border:none;transition:all 0.2s;display:inline-flex;align-items:center;gap:5px;}
+.btn-c{background:rgba(0,212,255,0.1);color:var(--cyan);border:1px solid rgba(0,212,255,0.4);}
+.btn-c:hover{background:rgba(0,212,255,0.2);box-shadow:0 0 14px rgba(0,212,255,0.3);}
+.bfull{width:100%;justify-content:center;}
+.notea{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:7px 9px;color:var(--text);font-family:'Share Tech Mono',monospace;font-size:11px;resize:vertical;min-height:55px;outline:none;}
+.notea:focus{border-color:var(--cyan);}
+.gauge-wrap{padding:14px;text-align:center;}
+.gsvg{position:relative;width:140px;height:80px;margin:0 auto 9px;}
+.gval{position:absolute;bottom:0;left:50%;transform:translateX(-50%);font-family:'Orbitron',monospace;font-size:18px;font-weight:900;color:var(--gold);}
+.gl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;}
+.cdgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:10px;}
+.cdb{background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:7px 4px;text-align:center;}
+.cdv{font-family:'Orbitron',monospace;font-size:17px;font-weight:700;color:var(--cyan);display:block;}
+.cdl{font-size:7px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;display:block;margin-top:2px;}
+.stabs{display:flex;flex-wrap:wrap;gap:3px;padding:7px 9px;border-bottom:1px solid var(--border);background:rgba(0,0,0,0.2);}
+.stab{padding:3px 8px;font-size:9px;border:1px solid var(--border);border-radius:9px;cursor:pointer;color:var(--text3);font-family:'Share Tech Mono',monospace;transition:all 0.15s;}
+.stab:hover{border-color:var(--cyan);color:var(--cyan);}
+.stab.active{background:rgba(0,212,255,0.15);border-color:var(--cyan);color:var(--cyan);}
+.spb{display:flex;align-items:center;gap:7px;padding:7px 11px;border-bottom:1px solid var(--border);}
+.spt{flex:1;height:5px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;border:1px solid var(--border);}
+.spf{height:100%;border-radius:3px;transition:width 0.6s ease;}
+.sppct{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;min-width:36px;text-align:right;}
+.tlist{padding:7px 10px;display:flex;flex-direction:column;gap:3px;max-height:265px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border2) transparent;}
+.ti{display:flex;align-items:center;gap:7px;padding:5px 7px;border-radius:6px;cursor:pointer;transition:all 0.15s;border:1px solid transparent;}
+.ti:hover{background:rgba(0,212,255,0.05);border-color:var(--border);}
+.ti.done{background:rgba(0,255,136,0.04);border-color:rgba(0,255,136,0.15);}
+.tchk{width:15px;height:15px;border-radius:3px;border:1.5px solid var(--text3);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.25s;}
+.ti.done .tchk{background:var(--green);border-color:var(--green);box-shadow:0 0 7px rgba(0,255,136,0.3);}
+.tchkm{font-size:8px;font-weight:700;color:var(--bg);opacity:0;transform:scale(0);transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);}
+.ti.done .tchkm{opacity:1;transform:scale(1);}
+.tn{font-size:11px;line-height:1.4;transition:color 0.2s;flex:1;}
+.ti.done .tn{color:var(--text3);text-decoration:line-through;}
+.tcat{font-size:8px;color:var(--text3);font-family:'Share Tech Mono',monospace;padding:1px 5px;background:rgba(255,255,255,0.04);border-radius:7px;flex-shrink:0;white-space:nowrap;}
+.alist{padding:9px 11px;display:flex;flex-direction:column;gap:5px;max-height:350px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border2) transparent;}
+.ai{display:flex;gap:9px;align-items:center;padding:9px 11px;border-radius:8px;border:1px solid var(--border);background:var(--panel2);transition:all 0.3s;}
+.ai.unlocked{border-color:rgba(255,215,0,0.35);background:rgba(255,215,0,0.05);}
+.ai.locked{opacity:0.5;filter:grayscale(0.5);}
+.aico{font-size:22px;flex-shrink:0;}
+.ainfo{flex:1;min-width:0;}
+.an{font-size:12px;font-weight:600;font-family:'Rajdhani',sans-serif;letter-spacing:0.5px;}
+.ai.unlocked .an{color:var(--gold);}
+.ad{font-size:10px;color:var(--text3);margin-top:1px;line-height:1.4;}
+.aw{font-size:9px;font-family:'Share Tech Mono',monospace;margin-top:3px;color:var(--text3);line-height:1.3;}
+.ai.unlocked .aw{color:var(--green);}
+.abadge{font-size:9px;padding:2px 7px;border-radius:9px;flex-shrink:0;font-family:'Share Tech Mono',monospace;}
+.abadge.unlocked{background:rgba(255,215,0,0.15);color:var(--gold);border:1px solid rgba(255,215,0,0.3);}
+.abadge.locked{background:rgba(255,255,255,0.04);color:var(--text3);border:1px solid var(--border);}
+.rtabs{display:flex;flex-wrap:wrap;gap:3px;padding:7px 9px;border-bottom:1px solid var(--border);}
+.rtab{padding:2px 8px;font-size:9px;border:1px solid var(--border);border-radius:8px;cursor:pointer;color:var(--text3);transition:all 0.15s;font-family:'Share Tech Mono',monospace;}
+.rtab:hover{border-color:var(--cyan);color:var(--cyan);}
+.rtab.active{background:rgba(0,212,255,0.12);border-color:var(--cyan);color:var(--cyan);}
+.rlist{padding:9px 11px;display:flex;flex-direction:column;gap:5px;max-height:290px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border2) transparent;}
+.rcard{padding:9px 11px;background:var(--panel2);border:1px solid var(--border);border-radius:7px;transition:all 0.15s;text-decoration:none;display:block;}
+.rcard:hover{border-color:var(--cyan);transform:translateX(2px);}
+.rct{display:flex;justify-content:space-between;align-items:flex-start;gap:7px;}
+.rn{font-size:12px;font-weight:500;color:var(--text);}
+.rtype{font-size:9px;padding:1px 6px;border-radius:7px;font-family:'Share Tech Mono',monospace;flex-shrink:0;}
+.rtype.yt{background:rgba(255,68,85,0.12);color:var(--red);border:1px solid rgba(255,68,85,0.2);}
+.rtype.qbank{background:rgba(255,215,0,0.1);color:var(--gold);border:1px solid rgba(255,215,0,0.2);}
+.rtype.free{background:rgba(0,255,136,0.08);color:var(--green);border:1px solid rgba(0,255,136,0.2);}
+.rtype.mock{background:rgba(180,79,255,0.1);color:var(--purple);border:1px solid rgba(180,79,255,0.2);}
+.rd{font-size:10px;color:var(--text3);margin-top:3px;line-height:1.4;}
+.ru{font-size:9px;color:var(--cyan);margin-top:3px;font-family:'Share Tech Mono',monospace;}
+.toast-c{position:fixed;top:68px;right:14px;z-index:9000;display:flex;flex-direction:column;gap:5px;pointer-events:none;}
+.toast{background:var(--panel2);border:1px solid var(--border2);border-radius:8px;padding:9px 13px;font-size:12px;display:flex;align-items:center;gap:7px;max-width:250px;animation:tIn 0.4s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 8px 30px rgba(0,0,0,0.5);}
+.toast.gold{border-color:rgba(255,215,0,0.4);box-shadow:0 8px 30px rgba(0,0,0,0.5),0 0 18px rgba(255,215,0,0.2);}
+.toast.purple{border-color:rgba(180,79,255,0.5);box-shadow:0 8px 30px rgba(0,0,0,0.5),0 0 18px rgba(180,79,255,0.3);}
+@keyframes tIn{from{opacity:0;transform:translateX(50px) scale(0.9);}to{opacity:1;transform:translateX(0) scale(1);}}
+@keyframes tOut{from{opacity:1;}to{opacity:0;transform:translateX(50px);}}
+.lvo{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9998;display:none;align-items:center;justify-content:center;}
+.lvb{text-align:center;padding:36px;background:var(--panel);border:2px solid var(--gold);border-radius:14px;box-shadow:0 0 40px rgba(255,215,0,0.3);animation:zIn 0.5s cubic-bezier(0.34,1.56,0.64,1);}
+@keyframes zIn{from{transform:scale(0.5);opacity:0;}to{transform:scale(1);opacity:1;}}
+.lvico{font-size:56px;margin-bottom:10px;}
+.lvtitle{font-family:'Orbitron',monospace;font-size:26px;font-weight:900;color:var(--gold);margin-bottom:7px;}
+.lvsub{font-size:13px;color:var(--text2);margin-bottom:18px;}
+.part{position:fixed;pointer-events:none;border-radius:50%;z-index:9997;animation:pf 0.8s ease-out forwards;}
+@keyframes pf{from{opacity:1;transform:translate(0,0) scale(1);}to{opacity:0;transform:translate(var(--tx),var(--ty)) scale(0);}}
+.blink{animation:bl 1s step-end infinite;}
+@keyframes bl{0%,100%{opacity:1;}50%{opacity:0;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="lvo" id="lvo"><div class="lvb"><div class="lvico">⚡</div><div class="lvtitle">LEVEL UP!</div><div class="lvsub" id="lvtxt">Level 2 unlocked!</div><button class="btn btn-c" onclick="document.getElementById('lvo').style.display='none'">CONTINUE MISSION</button></div></div>
+<div class="toast-c" id="tc"></div>
+<div class="hud"><div class="hud-inner">
+  <div class="logo" onclick="goToDay(todayNum())" title="Jump to today">NEET·PG<span class="blink" style="color:var(--gold)">_</span></div>
+  <div class="hud-stats">
+    <div class="hs"><div class="hs-v" style="color:var(--purple)" id="hLvl">1</div><div class="hs-l">Level</div></div>
+    <div class="hs"><div class="hs-v" style="color:var(--gold)" id="hXP">0</div><div class="hs-l">Total XP</div></div>
+    <div class="hs"><div class="hs-v" style="color:var(--green)" id="hDays">0</div><div class="hs-l">Days Done</div></div>
+    <div class="hs"><div class="hs-v" style="color:var(--cyan)" id="hMCQ">0</div><div class="hs-l">MCQs</div></div>
+    <div class="hs"><div class="hs-v" style="color:var(--red)" id="hLeft">98</div><div class="hs-l">Days Left</div></div>
+  </div>
+  <div class="xp-wrap">
+    <div class="xp-lbl"><span id="xpLbl">LVL 1 — MBBS RECRUIT</span><span id="xpNext">0/500 XP</span></div>
+    <div class="xp-track"><div class="xp-fill" id="xpFill" style="width:0%"></div></div>
+  </div>
+  <div class="streak"><span style="font-size:15px">🔥</span><div><div class="streak-n" id="hStreak">0</div><div class="streak-l">Streak</div></div></div>
+</div></div>
+<div class="main">
+<div style="display:flex;flex-direction:column;gap:11px;">
+  <div class="panel"><div class="ph"><span class="pt">⏱ Countdown</span></div>
+    <div class="cdgrid">
+      <div class="cdb"><span class="cdv" id="cdD">98</span><span class="cdl">Days</span></div>
+      <div class="cdb"><span class="cdv" id="cdH">00</span><span class="cdl">Hrs</span></div>
+      <div class="cdb"><span class="cdv" id="cdM">00</span><span class="cdl">Min</span></div>
+      <div class="cdb"><span class="cdv" id="cdS">00</span><span class="cdl">Sec</span></div>
+    </div>
+    <div style="padding:0 11px 9px;text-align:center;font-size:10px;color:var(--text3);font-family:'Share Tech Mono',monospace;" id="cdMsg">NEET PG · AUG 30, 2026</div>
+  </div>
+  <div class="panel" style="flex:1"><div class="ph"><span class="pt">🗺 Mission Map</span><span class="ps" id="mProg">0/83</span></div>
+    <div class="mscroll" id="mList"></div>
+  </div>
+</div>
+<div style="display:flex;flex-direction:column;gap:11px;">
+  <div class="panel"><div class="ph"><span class="pt">📅 Week at a Glance</span><span class="ps" id="wLbl">WEEK 1</span></div><div class="wgrid" id="wGrid"></div></div>
+  <div class="panel">
+    <div class="dnav">
+      <button class="dnbtn" onclick="chDay(-1)">◀</button>
+      <div class="di"><div class="dtitle" id="dTitle">DAY 1 — MON, MAY 25</div><div class="dsub" id="dSub">PHASE 1 · WEEK 1</div></div>
+      <button class="dnbtn" onclick="chDay(1)">▶</button>
+    </div>
+    <div class="dpw"><div class="dpl"><span>DAILY OBJECTIVES</span><span id="dPct" style="color:var(--green)">0/0</span></div><div class="dpb"><div class="dpf" id="dPF" style="width:0%"></div></div></div>
+    <div class="objs" id="oList"></div>
+  </div>
+  <div class="panel">
+    <div class="ph"><span class="pt">📊 MCQ Battle Log</span><span class="ps" id="accBadge">-- % ACC</span></div>
+    <div class="mq-grid">
+      <div class="mq-f"><span class="mq-l">Attempted Today</span><input type="number" class="mq-i" id="mqA" placeholder="0" min="0" oninput="updMQ()"></div>
+      <div class="mq-f"><span class="mq-l">Correct Today</span><input type="number" class="mq-i" id="mqC" placeholder="0" min="0" oninput="updMQ()"></div>
+    </div>
+    <div style="padding:5px 11px 0;"><div class="mq-ab"><div class="mq-af" id="mqAF" style="width:0%;background:var(--green)"></div></div><div class="mq-al" id="mqAL">Enter your MCQ data above</div></div>
+    <div class="mq-stats">
+      <div class="mq-s"><div class="mq-sv" style="color:var(--cyan)" id="mTod">0</div><div class="mq-sl">Today</div></div>
+      <div class="mq-s"><div class="mq-sv" style="color:var(--gold)" id="mTot">0</div><div class="mq-sl">Total</div></div>
+      <div class="mq-s"><div class="mq-sv" style="color:var(--green)" id="mAcc">--%</div><div class="mq-sl">Overall Acc</div></div>
+    </div>
+    <div style="padding:0 11px 10px;display:flex;flex-direction:column;gap:5px;">
+      <button class="btn btn-c bfull" onclick="saveMQ()">⚡ LOG TODAY'S BATTLE</button>
+      <textarea class="notea" id="dNotes" placeholder="Weak topics, observations, what to revise tomorrow..."></textarea>
+    </div>
+  </div>
+</div>
+<div style="display:flex;flex-direction:column;gap:11px;">
+  <div class="panel"><div class="ph"><span class="pt">🎯 Projected Rank</span></div>
+    <div class="gauge-wrap">
+      <div class="gsvg">
+        <svg width="140" height="80" viewBox="0 0 140 80" fill="none">
+          <path d="M8 76 A62 62 0 0 1 132 76" stroke="rgba(255,255,255,0.06)" stroke-width="9" stroke-linecap="round"/>
+          <path id="gPath" d="M8 76 A62 62 0 0 1 132 76" stroke="url(#gG)" stroke-width="9" stroke-linecap="round" stroke-dasharray="196" stroke-dashoffset="196"/>
+          <defs><linearGradient id="gG" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#00ff88"/><stop offset="50%" stop-color="#ffd700"/><stop offset="100%" stop-color="#ff4455"/></linearGradient></defs>
+        </svg>
+        <div class="gval" id="gVal">—</div>
+      </div>
+      <div class="gl">PROJECTED RANK</div>
+      <div style="font-size:11px;color:var(--text2);margin-top:4px;" id="gSub">Complete objectives to unlock</div>
+      <div style="display:flex;justify-content:space-between;margin-top:7px;font-size:9px;color:var(--text3);font-family:'Share Tech Mono',monospace;">
+        <span>BEST: <span style="color:var(--green)" id="bestR">—</span></span>
+        <span>TARGET: <span style="color:var(--gold)">≤1000</span></span>
+      </div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="ph"><span class="pt">📚 Subject Arsenal</span><span class="ps" id="saPct">0% overall</span></div>
+    <div class="stabs" id="sTabs"></div>
+    <div class="spb"><div class="spt"><div class="spf" id="sPF" style="width:0%"></div></div><div class="sppct" id="sPct">0%</div></div>
+    <div class="tlist" id="tList"></div>
+  </div>
+  <div class="panel">
+    <div class="ph"><span class="pt">🏆 Achievements</span><span class="ps" id="achCnt">0/18</span></div>
+    <div class="alist" id="aList"></div>
+  </div>
+  <div class="panel">
+    <div class="ph"><span class="pt">🔗 Resources</span></div>
+    <div class="rtabs" id="rTabs"></div>
+    <div class="rlist" id="rList"></div>
+  </div>
+</div>
+</div></div>
+<script>
+const EXAM=new Date('2026-08-30T09:00:00');
+const START=new Date('2026-05-25T00:00:00');
+const LEVELS=[{l:1,n:'MBBS Recruit',x:0},{l:2,n:'Pathology Apprentice',x:500},{l:3,n:'Pharma Initiate',x:1200},{l:4,n:'Surgery Cadet',x:2200},{l:5,n:'Medicine Lieutenant',x:3500},{l:6,n:'Clinical Specialist',x:5500},{l:7,n:'Grand Rounds Warrior',x:8000},{l:8,n:'OBG Commander',x:11000},{l:9,n:'PSM Strategist',x:15000},{l:10,n:'NEET PG Champion',x:20000}];
+const SUBJS={
+'Surgery':{c:'#ff4455',t:[{id:'su1',n:'Surgical Anatomy & Wound Healing',cat:'Basics'},{id:'su2',n:'Esophagus — Ca, GERD, Achalasia',cat:'GI'},{id:'su3',n:'Stomach — PUD, Gastric Ca, Surgery',cat:'GI'},{id:'su4',n:'Small Intestine — Obstruction, Crohn\'s, TB gut',cat:'GI'},{id:'su5',n:'Large Intestine — Ca colon, IBD Surgery, Diverticulosis',cat:'GI'},{id:'su6',n:'Appendix — Acute appendicitis, Carcinoid',cat:'GI'},{id:'su7',n:'Liver — HCC, Abscesses, Hemangioma',cat:'HPB'},{id:'su8',n:'Biliary — Cholecystitis, Choledocholithiasis, Ca GB',cat:'HPB'},{id:'su9',n:'Pancreas — Acute/Chronic pancreatitis, Ca pancreas',cat:'HPB'},{id:'su10',n:'Breast — Fibroadenoma, Ca breast, FNAC, staging',cat:'Breast'},{id:'su11',n:'Thyroid — Goitre types, Ca thyroid, Thyroidectomy',cat:'Endocrine'},{id:'su12',n:'Parathyroid, Adrenal, MEN syndromes',cat:'Endocrine'},{id:'su13',n:'Hernia — Inguinal, Femoral, Hiatal, Complications',cat:'Abdomen'},{id:'su14',n:'Trauma — ATLS protocol, Abdominal, Thoracic trauma',cat:'Trauma'},{id:'su15',n:'Urology — BPH, Ca bladder, Ca kidney, Ca prostate',cat:'Urology'},{id:'su16',n:'Vascular — AAA, DVT, Varicose veins, PAD',cat:'Vascular'},{id:'su17',n:'Head & Neck — Salivary glands, Neck swellings, Ca',cat:'H&N'},{id:'su18',n:'Skin & Soft tissue — Melanoma, SCC, BCC',cat:'Skin'},{id:'su19',n:'Surgical instruments, eponyms & scoring systems',cat:'Misc'},{id:'su20',n:'Orthopaedic Surgery — Fractures, Dislocations high-yield',cat:'Ortho'}]},
+'Medicine':{c:'#00d4ff',t:[{id:'me1',n:'CVS — IHD, Acute MI, Angina management',cat:'CVS'},{id:'me2',n:'CVS — Heart failure, Cardiomyopathies, ECG',cat:'CVS'},{id:'me3',n:'CVS — Hypertension, JNC guidelines, drugs',cat:'CVS'},{id:'me4',n:'CVS — Arrhythmias, Valvular heart disease, RHD',cat:'CVS'},{id:'me5',n:'Respiratory — Asthma, COPD, management',cat:'Resp'},{id:'me6',n:'Respiratory — TB, ATT drugs, MDR-TB protocols',cat:'Resp'},{id:'me7',n:'Respiratory — ILD, Sarcoidosis, Pleural effusion',cat:'Resp'},{id:'me8',n:'Respiratory — Pneumonia, Lung cancer, PE',cat:'Resp'},{id:'me9',n:'GI — PUD, IBD, Malabsorption, GI bleeding',cat:'GI'},{id:'me10',n:'Hepatology — Hepatitis B & C, Cirrhosis, Portal HTN',cat:'GI'},{id:'me11',n:'Hepatology — Liver failure, HRS, SBP management',cat:'GI'},{id:'me12',n:'Neurology — Stroke types, thrombolysis criteria',cat:'Neuro'},{id:'me13',n:'Neurology — Epilepsy, seizure classification, drugs',cat:'Neuro'},{id:'me14',n:'Neurology — Meningitis, Encephalitis, CSF analysis',cat:'Neuro'},{id:'me15',n:'Neurology — Movement disorders, dementia, MS',cat:'Neuro'},{id:'me16',n:'Endocrine — Diabetes: types, management, complications',cat:'Endo'},{id:'me17',n:'Endocrine — Thyroid, Cushing\'s, Addison\'s, Pituitary',cat:'Endo'},{id:'me18',n:'Haematology — Anemias: iron, B12, hemolytic',cat:'Haem'},{id:'me19',n:'Haematology — Bleeding disorders, DIC, Lymphoma',cat:'Haem'},{id:'me20',n:'Nephrology — AKI, CKD, GN syndromes, Dialysis',cat:'Renal'},{id:'me21',n:'Rheumatology — SLE, RA, Gout, Spondyloarthropathies',cat:'Rheum'},{id:'me22',n:'Infectious diseases — HIV/AIDS, Malaria, Sepsis',cat:'ID'}]},
+'OBG':{c:'#b44fff',t:[{id:'ob1',n:'Normal pregnancy — ANC, GTPAL, screening',cat:'Obs'},{id:'ob2',n:'Normal labour — stages, mechanism, management',cat:'Obs'},{id:'ob3',n:'Abnormal labour — CPD, malpresentations, cord',cat:'Obs'},{id:'ob4',n:'APH — Placenta praevia, Abruptio placentae',cat:'Obs'},{id:'ob5',n:'PPH — causes, management, uterotonic drugs',cat:'Obs'},{id:'ob6',n:'PIH — Pre-eclampsia, Eclampsia, HELLP syndrome',cat:'Obs'},{id:'ob7',n:'Medical disorders in pregnancy — DM, Heart disease',cat:'Obs'},{id:'ob8',n:'Fetal monitoring — CTG, BPP, doppler',cat:'Obs'},{id:'ob9',n:'Obstetric operations — LSCS, forceps, ventouse',cat:'Obs'},{id:'ob10',n:'Puerperal complications, PROM, Preterm labour',cat:'Obs'},{id:'ob11',n:'Menstrual disorders — DUB, amenorrhoea, dysmenorrhoea',cat:'Gynae'},{id:'ob12',n:'PCOS, Endometriosis — diagnosis, management',cat:'Gynae'},{id:'ob13',n:'Infertility — male & female causes, IUI, IVF',cat:'Gynae'},{id:'ob14',n:'Contraception — all methods, failure rates, emergency',cat:'Gynae'},{id:'ob15',n:'Ca cervix — CIN, HPV, FIGO staging, Pap smear',cat:'Cancer'},{id:'ob16',n:'Ca ovary — FIGO staging, types, tumor markers',cat:'Cancer'},{id:'ob17',n:'Ca endometrium — staging, management, risk factors',cat:'Cancer'},{id:'ob18',n:'Pelvic infections, PID, vulvar conditions',cat:'Infect'},{id:'ob19',n:'Gynaecological operations — types of hysterectomy',cat:'Ops'}]},
+'PSM':{c:'#00ff88',t:[{id:'ps1',n:'Epidemiology — study designs, RCT, cohort, case-control',cat:'Epi'},{id:'ps2',n:'Biostatistics — sensitivity, specificity, PPV, NPV, LR',cat:'Stats'},{id:'ps3',n:'Biostatistics — NNT, NNH, AR, RR, OR, p-value, CI',cat:'Stats'},{id:'ps4',n:'Screening — Wilson-Jungner criteria, validity, reliability',cat:'Screen'},{id:'ps5',n:'Demography — fertility rates, mortality rates, census',cat:'Demog'},{id:'ps6',n:'Nutrition — PEM, deficiencies, RDA, ICMR guidelines',cat:'Nutrition'},{id:'ps7',n:'NHP — NHM, RNTCP, NVBDCP, NPCB',cat:'NHP'},{id:'ps8',n:'NHP — RCH, RBSK, Mission Indradhanush, PCPNDT',cat:'NHP'},{id:'ps9',n:'NHP — NPCDCS, NMHP, NPCDP, cancer programs',cat:'NHP'},{id:'ps10',n:'Immunization — UIP schedule, cold chain, AEFI',cat:'Immuniz'},{id:'ps11',n:'Water & environment — water standards, purification',cat:'Environ'},{id:'ps12',n:'Communicable diseases control — malaria, polio, measles',cat:'CD'},{id:'ps13',n:'Health indices — HDI, MMR, IMR, NMR, TFR',cat:'Indices'},{id:'ps14',n:'Occupational health — hazards, pneumoconioses, ILO',cat:'OccH'}]},
+'Pharmacology':{c:'#ffd700',t:[{id:'ph1',n:'General Pharmacology — PK, PD, bioavailability, half-life',cat:'Gen'},{id:'ph2',n:'ANS — Adrenergic agonists & antagonists',cat:'ANS'},{id:'ph3',n:'ANS — Cholinergic drugs, organophosphate poisoning',cat:'ANS'},{id:'ph4',n:'CVS drugs — Antihypertensives: ACEi, ARB, CCB, BB',cat:'CVS'},{id:'ph5',n:'CVS — Antiarrhythmics: Vaughan-Williams classification',cat:'CVS'},{id:'ph6',n:'CVS — Antifailure, Diuretics, Anticoagulants, Antiplatelets',cat:'CVS'},{id:'ph7',n:'CNS — Antiepileptics: mechanisms, teratogenicity',cat:'CNS'},{id:'ph8',n:'CNS — Antipsychotics, antidepressants, mood stabilizers',cat:'CNS'},{id:'ph9',n:'CNS — Anxiolytics, hypnotics, addiction pharmacology',cat:'CNS'},{id:'ph10',n:'Analgesics — NSAIDs, COX-2 inhibitors, Opioids',cat:'Analg'},{id:'ph11',n:'Antibiotics — Penicillins, Cephalosporins, Carbapenems',cat:'Antimic'},{id:'ph12',n:'Antibiotics — Macrolides, Fluoroquinolones, Aminoglycosides',cat:'Antimic'},{id:'ph13',n:'Antifungals, Antivirals, Antiparasitic, Anti-TB drugs',cat:'Antimic'},{id:'ph14',n:'Anticancer drugs — classifications, mechanisms, toxicities',cat:'Cancer'},{id:'ph15',n:'Endocrine drugs — Insulin types, OHA, thyroid drugs',cat:'Endo'},{id:'ph16',n:'GI drugs — PPIs, H2B, antiemetics, laxatives, motility',cat:'GI'},{id:'ph17',n:'Drug of choice — complete DOC master list all subjects',cat:'DOC'},{id:'ph18',n:'Drugs in pregnancy — safety categories, teratogens',cat:'Special'}]},
+'Pathology':{c:'#ff8c00',t:[{id:'pa1',n:'Cell injury — necrosis types, apoptosis, reversible changes',cat:'Gen'},{id:'pa2',n:'Inflammation — acute, chronic, granuloma types, mediators',cat:'Gen'},{id:'pa3',n:'Wound healing — types, factors affecting, keloid vs scar',cat:'Gen'},{id:'pa4',n:'Neoplasia — benign vs malignant, carcinogenesis, grading',cat:'Neo'},{id:'pa5',n:'Haematology path — anemias, CBC interpretation',cat:'Haem'},{id:'pa6',n:'WBC disorders — leukemia types, lymphoma, myeloma',cat:'Haem'},{id:'pa7',n:'Bleeding disorders — coagulation cascade, tests, DIC',cat:'Haem'},{id:'pa8',n:'CVS pathology — atherosclerosis, MI morphology, cardiomyopathy',cat:'CVS'},{id:'pa9',n:'Respiratory path — pneumonia patterns, TB, Ca lung, sarcoid',cat:'Resp'},{id:'pa10',n:'GI pathology — PUD, IBD morphology, Ca colon',cat:'GI'},{id:'pa11',n:'Liver path — hepatitis patterns, cirrhosis morphology, HCC',cat:'GI'},{id:'pa12',n:'Renal path — GN patterns, IF findings, nephrotic vs nephritic',cat:'Renal'},{id:'pa13',n:'Endocrine path — thyroid, adrenal, pituitary tumors',cat:'Endo'},{id:'pa14',n:'Female genital path — ovarian tumors, Ca cervix histology',cat:'Gynae'},{id:'pa15',n:'Histology slides — classic microscopy findings (must-know)',cat:'Histo'},{id:'pa16',n:'Tumor markers — AFP, CEA, CA-125, PSA, LDH, beta-HCG',cat:'Markers'}]},
+'Microbiology':{c:'#00aacc',t:[{id:'mi1',n:'Gram+ cocci — Staph aureus, Strep pyogenes, Pneumococcus',cat:'Bact'},{id:'mi2',n:'Gram+ rods — Clostridium, Bacillus, Listeria, Corynebacterium',cat:'Bact'},{id:'mi3',n:'Gram- rods — E.coli, Klebsiella, Pseudomonas, H.influenzae',cat:'Bact'},{id:'mi4',n:'Gram- rods — Salmonella, Shigella, Vibrio, Brucella',cat:'Bact'},{id:'mi5',n:'Intracellular organisms — Mycobacteria, Chlamydia, Rickettsia',cat:'Bact'},{id:'mi6',n:'DNA viruses — Herpes, Adenovirus, Poxvirus, Parvovirus',cat:'Viro'},{id:'mi7',n:'RNA viruses — HIV, Influenza, Measles, Polio, Rabies',cat:'Viro'},{id:'mi8',n:'Hepatitis viruses — A, B, C, D, E: serology, markers',cat:'Viro'},{id:'mi9',n:'Parasitology — Malaria species, diagnosis, treatment',cat:'Para'},{id:'mi10',n:'Parasitology — Entamoeba, Giardia, Leishmania, Trypanosoma',cat:'Para'},{id:'mi11',n:'Parasitology — Helminths, Tapeworms, Filaria, Toxoplasma',cat:'Para'},{id:'mi12',n:'Mycology — Candida, Aspergillus, Cryptococcus, dermatophytes',cat:'Fungi'},{id:'mi13',n:'Sterilization & Disinfection — methods, agents, validation',cat:'Steril'},{id:'mi14',n:'Immunology — innate, adaptive, cytokines, complement, hypersensitivity',cat:'Immuno'},{id:'mi15',n:'Lab diagnosis — culture media, staining methods, serology',cat:'Lab'}]},
+'Paediatrics':{c:'#7F77DD',t:[{id:'pd1',n:'Neonatology — NNJ, ABO/Rh incompatibility, exchange transfusion',cat:'Neo'},{id:'pd2',n:'Neonatology — RDS, BPD, NEC, birth asphyxia, APGAR',cat:'Neo'},{id:'pd3',n:'Growth & Development — milestones, reflexes, Denver II',cat:'Growth'},{id:'pd4',n:'Nutrition — breastfeeding, weaning, complementary feeding, PEM',cat:'Nutr'},{id:'pd5',n:'Vitamin deficiencies — D, A, B12, C, K, B1, B2',cat:'Nutr'},{id:'pd6',n:'Immunization — UIP, IAP schedule, AEFI, cold chain',cat:'Immuniz'},{id:'pd7',n:'Paediatric infections — measles, mumps, chickenpox, pertussis',cat:'Infect'},{id:'pd8',n:'Paediatric infections — meningitis, pneumonia, TB in children',cat:'Infect'},{id:'pd9',n:'Genetic disorders — Down, Turner, Klinefelter, PKU, G6PD',cat:'Genet'},{id:'pd10',n:'Haematology — sickle cell, thalassemia, ITP, haemophilia',cat:'Haem'},{id:'pd11',n:'Nephrology — nephrotic vs nephritic in children',cat:'Renal'},{id:'pd12',n:'Paediatric emergencies — febrile seizure, croup, epiglottitis',cat:'Emerg'}]},
+'Anatomy':{c:'#5DCAA5',t:[{id:'an1',n:'Neuroanatomy — CNS tracts, cranial nerve nuclei, brain anatomy',cat:'Neuro'},{id:'an2',n:'Cranial nerves — all 12: course, function, lesion effects',cat:'Neuro'},{id:'an3',n:'Spinal cord — tracts, blood supply, injury level effects',cat:'Neuro'},{id:'an4',n:'Thorax — heart anatomy, coronary arteries, great vessels',cat:'Thorax'},{id:'an5',n:'Abdomen — peritoneum, inguinal canal, femoral triangle',cat:'Abdomen'},{id:'an6',n:'Pelvis — pelvic floor muscles, uterus, bladder relations',cat:'Pelvis'},{id:'an7',n:'Upper limb — brachial plexus, nerve injuries, dermatomes',cat:'Limbs'},{id:'an8',n:'Lower limb — lumbar plexus, sciatic nerve, compartments',cat:'Limbs'},{id:'an9',n:'Applied anatomy — surgical incisions, laparoscopic ports',cat:'Applied'},{id:'an10',n:'Embryology — organ development, congenital anomalies',cat:'Embryo'}]},
+'Physiology':{c:'#20C997',t:[{id:'phy1',n:'Blood physiology — hemoglobin, coagulation cascade, blood groups',cat:'Blood'},{id:'phy2',n:'CVS — cardiac cycle, Starling\'s law, pressures, output',cat:'CVS'},{id:'phy3',n:'CVS — ECG physiology, regulation, Frank-Starling mechanism',cat:'CVS'},{id:'phy4',n:'Respiratory — lung volumes, mechanics, compliance, resistance',cat:'Resp'},{id:'phy5',n:'Respiratory — gas exchange, O2 dissociation curve, V/Q ratio',cat:'Resp'},{id:'phy6',n:'Renal — GFR, tubular functions, clearance, concentration',cat:'Renal'},{id:'phy7',n:'Renal — acid-base balance, ABG interpretation, buffers',cat:'Renal'},{id:'phy8',n:'Endocrine — hypothalamic-pituitary axis, feedback loops',cat:'Endo'},{id:'phy9',n:'GI physiology — secretions, absorption, motility',cat:'GI'},{id:'phy10',n:'Neurophysiology — action potential, synapse, reflexes',cat:'Neuro'},{id:'phy11',n:'Special senses — vision, auditory physiology, vestibular',cat:'Senses'}]},
+'Biochemistry':{c:'#E8B4B8',t:[{id:'bc1',n:'Enzymes — kinetics, Michaelis-Menten, inhibition types',cat:'Enzymes'},{id:'bc2',n:'Carbohydrate metabolism — glycolysis, TCA cycle, HMP shunt',cat:'Metab'},{id:'bc3',n:'Lipid metabolism — beta oxidation, ketogenesis, cholesterol synthesis',cat:'Metab'},{id:'bc4',n:'Protein metabolism — urea cycle, amino acid catabolism disorders',cat:'Metab'},{id:'bc5',n:'Vitamins — water & fat soluble, deficiency diseases, coenzymes',cat:'Vitamins'},{id:'bc6',n:'Molecular biology — DNA replication, transcription, translation',cat:'MolBio'},{id:'bc7',n:'Inborn errors — PKU, alkaptonuria, galactosemia, MSUD',cat:'IEM'},{id:'bc8',n:'Hemoglobin biochemistry — synthesis, porphyrias, sickle cell',cat:'Blood'}]},
+'ENT':{c:'#FD7E14',t:[{id:'en1',n:'Ear anatomy — middle ear, cochlea, ossicles, blood supply',cat:'Ear'},{id:'en2',n:'Otitis media — acute, chronic, CSOM types, complications',cat:'Ear'},{id:'en3',n:'Deafness — conductive vs SNHL, audiometry, tuning fork tests',cat:'Ear'},{id:'en4',n:'Vertigo — BPPV (Epley), Meniere\'s, labyrinthitis, central vs peripheral',cat:'Ear'},{id:'en5',n:'Nose — DNS, sinusitis, nasal polyps, epistaxis management',cat:'Nose'},{id:'en6',n:'Pharynx — tonsillitis, adenoids, peritonsillar abscess, quinsy',cat:'Throat'},{id:'en7',n:'Larynx — laryngitis, Ca larynx, hoarseness, stridor',cat:'Larynx'},{id:'en8',n:'ENT tumors — NPC, acoustic neuroma, glomus jugulare',cat:'Tumors'}]},
+'Ophthalmology':{c:'#74B9FF',t:[{id:'op1',n:'Glaucoma — primary, secondary, angle closure, drugs, surgery',cat:'Glaucoma'},{id:'op2',n:'Cataract — types, phaco vs ECCE, IOL power, complications',cat:'Lens'},{id:'op3',n:'Retina — CRVO, BRVO, CRAO, RD, diabetic retinopathy',cat:'Retina'},{id:'op4',n:'Cornea — keratoconus, corneal ulcers, grafting, dystrophies',cat:'Cornea'},{id:'op5',n:'Uveitis — anterior vs posterior, HLA-B27, causes, management',cat:'Uvea'},{id:'op6',n:'Optic nerve — papilledema, optic neuritis, AION, disc changes',cat:'Optic'},{id:'op7',n:'Ophthalmic drugs — miotics, mydriatics, antiglaucoma agents',cat:'Drugs'},{id:'op8',n:'Ocular trauma, squint, amblyopia, refraction errors',cat:'Misc'}]},
+'Psychiatry':{c:'#A29BFE',t:[{id:'psy1',n:'Schizophrenia — symptoms, subtypes, antipsychotics, EPS',cat:'Psychosis'},{id:'psy2',n:'Mood disorders — MDD, Bipolar I/II, cyclothymia, dysthymia',cat:'Mood'},{id:'psy3',n:'Anxiety disorders — GAD, panic disorder, OCD, PTSD, phobias',cat:'Anxiety'},{id:'psy4',n:'Substance use disorders — alcohol, opioids, deaddiction',cat:'Substance'},{id:'psy5',n:'Organic psychiatric disorders — delirium vs dementia',cat:'Organic'},{id:'psy6',n:'Personality disorders — clusters A, B, C',cat:'PD'},{id:'psy7',n:'ICD-10 diagnostic criteria — key conditions for NEET PG',cat:'Diagnosis'},{id:'psy8',n:'Psychiatric drugs — NMS, serotonin syndrome, tardive dyskinesia',cat:'Drugs'}]},
+'Dermatology':{c:'#FDCB6E',t:[{id:'dr1',n:'Eczema — atopic, contact, nummular, management, steroids',cat:'Eczema'},{id:'dr2',n:'Psoriasis — types, Auspitz sign, Koebner, treatment ladder',cat:'Psoriasis'},{id:'dr3',n:'Bullous disorders — pemphigus vs pemphigoid, IF patterns',cat:'Bullous'},{id:'dr4',n:'Acne vulgaris — pathogenesis, comedones, isotretinoin',cat:'Acne'},{id:'dr5',n:'STDs — syphilis stages, gonorrhoea, HSV, HPV, LGV, chancroid',cat:'STD'},{id:'dr6',n:'Skin tumors — melanoma ABCDE, BCC, SCC, mycosis fungoides',cat:'Tumors'},{id:'dr7',n:'Fungal infections — tinea types, candidiasis, pityriasis',cat:'Fungal'},{id:'dr8',n:'Leprosy — Hansen\'s disease, Ridley-Jopling, WHO classification, MDT',cat:'Leprosy'}]},
+'Orthopaedics':{c:'#81ECEC',t:[{id:'or1',n:'Fractures — types, healing stages, complications, fixation',cat:'Fractures'},{id:'or2',n:'Spine — disc prolapse, spinal cord syndromes, PIVD',cat:'Spine'},{id:'or3',n:'Joints — dislocations, septic arthritis, TB bone & joint',cat:'Joints'},{id:'or4',n:'Bone tumors — osteosarcoma, Ewing\'s, GCT, chondrosarcoma',cat:'Tumors'},{id:'or5',n:'Paediatric ortho — DDH, CTEV, Perthes disease, SCFE',cat:'Paeds'},{id:'or6',n:'Metabolic bone — osteoporosis, osteomalacia, Paget\'s',cat:'Metabolic'}]},
+'FMT':{c:'#FAB1A0',t:[{id:'fm1',n:'Medical jurisprudence — IPC sections, MCI/NMC regulations',cat:'Legal'},{id:'fm2',n:'Wound examination — ante vs post-mortem, wound aging',cat:'Wounds'},{id:'fm3',n:'Poisoning — OP, arsenic, alcohol, CO, cyanide, snake bite',cat:'Toxicology'},{id:'fm4',n:'Medicolegal — consent types, dying declaration, MLC',cat:'Legal'},{id:'fm5',n:'Sexual offences — rape examination, POCSO, findings',cat:'Sexual'},{id:'fm6',n:'Death — certification, PMID, putrefaction, rigor mortis',cat:'Death'}]},
+'Radiology':{c:'#B2BEC3',t:[{id:'ra1',n:'X-ray signs — Cannonball, Ground glass, Silhouette, Sail',cat:'X-ray'},{id:'ra2',n:'CT & MRI — indications, contrast, contraindications',cat:'CT/MRI'},{id:'ra3',n:'CXR anatomy — normal, cardiac silhouette, mediastinum',cat:'Anatomy'},{id:'ra4',n:'USG — uses, Doppler, guided procedures, obstetric USG',cat:'USG'},{id:'ra5',n:'Nuclear medicine & interventional radiology basics',cat:'Nuclear'}]},
+'Anaesthesia':{c:'#DFE6E9',t:[{id:'ae1',n:'GA stages — induction, maintenance, emergence, MAC',cat:'GA'},{id:'ae2',n:'Inhalational agents — halothane, sevoflurane, isoflurane, N2O',cat:'Agents'},{id:'ae3',n:'IV agents — propofol, ketamine, thiopentone, etomidate',cat:'Agents'},{id:'ae4',n:'Muscle relaxants — succinylcholine, vecuronium, reversal agents',cat:'NMB'},{id:'ae5',n:'Regional anaesthesia — spinal, epidural, nerve blocks',cat:'Regional'},{id:'ae6',n:'Airway management — LMA, ETT, RSI, difficult airway',cat:'Airway'}]}
+};
+const RESOURCES={
+'All':[
+{n:'Marrow Grand Tests + Recall Lectures',t:'mock',d:'Best grand tests, all-India percentile ranking, recall sessions after every NEET PG exam.',u:'https://marrow.com',ul:'marrow.com'},
+{n:'Pre-PG QBank — 75,000+ MCQs + PYQs',t:'qbank',d:'Topic-wise MCQs with solutions, free PYQ, clinical question bank. Strong analytics.',u:'https://pre-pg.com',ul:'pre-pg.com'},
+{n:'PrepLadder QBank + Video Solutions',t:'qbank',d:'Top-rated QBank aligned with real exam. Video explanation for each MCQ.',u:'https://prepladder.com',ul:'prepladder.com'},
+{n:'DailyRounds — Clinical Case MCQs',t:'free',d:'Clinical case-based questions free to use. Builds exam-pattern reasoning.',u:'https://dailyrounds.org',ul:'dailyrounds.org'},
+{n:'Rejoy Health — Free PYQ with Solutions',t:'free',d:'Free previous year NEET PG papers with detailed solutions.',u:'https://rejoyhealth.com/resources',ul:'rejoyhealth.com'},
+{n:'DocTutorials — Free lectures + Mocks',t:'mock',d:'Free subject lectures, mock tests, and rapid revision series.',u:'https://doctutorials.com',ul:'doctutorials.com'}
+],
+'Surgery':[
+{n:'PrepLadder — Surgery (Rohan Khandelwal)',t:'yt',d:'Best surgery lectures for NEET PG. High-yield, GI, Oncology, Urology covered brilliantly.',u:'https://youtube.com/@prepladder',ul:'youtube.com/@prepladder'},
+{n:'Cerebellum Academy — Surgery (GR Garg)',t:'yt',d:'Free comprehensive surgery. Strong on GI surgery, oncology, surgical anatomy.',u:'https://youtube.com/@CerebellumAcademy',ul:'youtube.com/@CerebellumAcademy'},
+{n:'Marrow — Surgery Video Series',t:'yt',d:'Clinical surgery with case-based teaching. Updated for current exam pattern.',u:'https://marrow.com',ul:'marrow.com'},
+{n:'Surgery MCQs — Pre-PG QBank',t:'qbank',d:'Surgery-specific question bank with PYQ analysis, image-based Qs.',u:'https://pre-pg.com',ul:'pre-pg.com'}
+],
+'Medicine':[
+{n:'PrepLadder — Medicine (Vivek Jain)',t:'yt',d:'Excellent medicine lectures. All systems covered with PYQ correlation and clinical cases.',u:'https://youtube.com/@prepladder',ul:'youtube.com/@prepladder'},
+{n:'Cerebellum — Internal Medicine',t:'yt',d:'Free high-yield medicine on YouTube. Good rapid revision series.',u:'https://youtube.com/@CerebellumAcademy',ul:'youtube.com/@CerebellumAcademy'},
+{n:'Marrow — Medicine (Clinical focus)',t:'yt',d:'Case-based medicine lectures. Strong on cardiology and neurology.',u:'https://marrow.com',ul:'marrow.com'},
+{n:'Medicine MCQs — Pre-PG QBank',t:'qbank',d:'Clinical-type medicine MCQs with detailed explanations.',u:'https://pre-pg.com',ul:'pre-pg.com'}
+],
+'OBG':[
+{n:'PrepLadder — OBG (Sakshi Arora)',t:'yt',d:'#1 OBG faculty for NEET PG. Crystal clear Obstetrics and Gynaecology. Must watch.',u:'https://youtube.com/@prepladder',ul:'youtube.com/@prepladder'},
+{n:'DAMS — OBG Free Lectures',t:'yt',d:'Free OBG video lectures. Strong on gynaecological cancers and procedures.',u:'https://youtube.com/@damsdelhi',ul:'youtube.com/@damsdelhi'},
+{n:'Marrow — OBG with image MCQs',t:'yt',d:'High-yield OBG content with image-based clinical questions.',u:'https://marrow.com',ul:'marrow.com'},
+{n:'OBG MCQs — Pre-PG QBank',t:'qbank',d:'OBG-specific QBank with obstetric emergencies and gynaecological oncology focus.',u:'https://pre-pg.com',ul:'pre-pg.com'}
+],
+'PSM':[
+{n:'DocTutorials — PSM (Vivek Jain)',t:'yt',d:'Best PSM lectures. Biostatistics, Epidemiology, National Health Programs clearly explained.',u:'https://youtube.com/@DocTutorials',ul:'youtube.com/@DocTutorials'},
+{n:'PrepLadder — PSM Rapid Revision',t:'yt',d:'High-yield PSM revision. Biostatistics formulas, screening criteria, health indices.',u:'https://youtube.com/@prepladder',ul:'youtube.com/@prepladder'},
+{n:'PSM MCQs — Pre-PG QBank',t:'qbank',d:'PSM question bank with biostatistics calculations and NHP questions.',u:'https://pre-pg.com',ul:'pre-pg.com'}
+],
+'Pharmacology':[
+{n:'Cerebellum — Pharmacology (Sparsh Gupta)',t:'yt',d:'Best Pharmacology for PG entrance. Mnemonics, high-yield drug tables, DOC lists.',u:'https://youtube.com/@CerebellumAcademy',ul:'youtube.com/@CerebellumAcademy'},
+{n:'PrepLadder — Pharmacology',t:'yt',d:'Exam-focused pharmacology. Drug mechanisms, side effects, contraindications.',u:'https://youtube.com/@prepladder',ul:'youtube.com/@prepladder'},
+{n:'Pharma MCQs — Pre-PG QBank',t:'qbank',d:'Pharmacology QBank with drug-of-choice questions and case-based scenarios.',u:'https://pre-pg.com',ul:'pre-pg.com'}
+],
+'Pathology':[
+{n:'PrepLadder — Pathology (Rebecca James)',t:'yt',d:'Best Pathology for NEET PG. Systematic, histology images, clinical correlation.',u:'https://youtube.com/@prepladder',ul:'youtube.com/@prepladder'},
+{n:'Marrow — Pathology with histology slides',t:'yt',d:'Image-based pathology questions. Crucial for visual MCQs in exam.',u:'https://marrow.com',ul:'marrow.com'},
+{n:'Pathology MCQs — Pre-PG QBank',t:'qbank',d:'Pathology QBank with histology image questions and tumor marker MCQs.',u:'https://pre-pg.com',ul:'pre-pg.com'}
+],
+'Microbiology':[
+{n:'DocTutorials — Microbiology',t:'yt',d:'Strong Micro lectures. Bacteriology, Virology, Parasitology, Mycology.',u:'https://youtube.com/@DocTutorials',ul:'youtube.com/@DocTutorials'},
+{n:'PrepLadder — Microbiology',t:'yt',d:'High-yield micro with lab diagnosis focus. Staining, culture media, serology.',u:'https://youtube.com/@prepladder',ul:'youtube.com/@prepladder'},
+{n:'Micro MCQs — Pre-PG QBank',t:'qbank',d:'Microbiology QBank with organism-identification and lab-diagnosis questions.',u:'https://pre-pg.com',ul:'pre-pg.com'}
+],
+'Paediatrics':[
+{n:'PrepLadder — Paediatrics',t:'yt',d:'Immunization schedule, neonatology, milestones, paediatric infections.',u:'https://youtube.com/@prepladder',ul:'youtube.com/@prepladder'},
+{n:'Marrow — Paediatrics clinical focus',t:'yt',d:'Clinical paediatrics with case-based teaching. High-yield topics.',u:'https://marrow.com',ul:'marrow.com'},
+{n:'Paeds MCQs — Pre-PG QBank',t:'qbank',d:'Paediatric QBank with neonatal and developmental question focus.',u:'https://pre-pg.com',ul:'pre-pg.com'}
+],
+'Anatomy':[
+{n:'Dr. Najeeb — Anatomy (Neuroanatomy)',t:'yt',d:'Best conceptual anatomy. Essential for neuroanatomy and embryology.',u:'https://youtube.com/@DrNajeebLectures',ul:'youtube.com/@DrNajeebLectures'},
+{n:'PrepLadder — Anatomy High-Yield',t:'yt',d:'Applied anatomy and clinical correlations for PG entrance. Quick and focused.',u:'https://youtube.com/@prepladder',ul:'youtube.com/@prepladder'}
+],
+'Physiology':[
+{n:'Dr. Najeeb — Physiology',t:'yt',d:'Outstanding conceptual physiology. CVS, Renal, Respiratory masterclass lectures.',u:'https://youtube.com/@DrNajeebLectures',ul:'youtube.com/@DrNajeebLectures'},
+{n:'PrepLadder — Physiology for NEET PG',t:'yt',d:'High-yield physiology with MCQ correlation. Curves, graphs, normal values.',u:'https://youtube.com/@prepladder',ul:'youtube.com/@prepladder'}
+],
+'ENT':[
+{n:'PrepLadder — ENT',t:'yt',d:'Concise ENT. Deafness, vertigo, tumors, ENT operations.',u:'https://youtube.com/@prepladder',ul:'youtube.com/@prepladder'},
+{n:'DocTutorials — ENT',t:'yt',d:'Free ENT lectures. Audiometry, surgical conditions, high-yield topics.',u:'https://youtube.com/@DocTutorials',ul:'youtube.com/@DocTutorials'}
+],
+'Ophthalmology':[
+{n:'PrepLadder — Ophthalmology',t:'yt',d:'Image-based ophthalmology. Glaucoma, retinal disorders, ophthalmic drugs.',u:'https://youtube.com/@prepladder',ul:'youtube.com/@prepladder'},
+{n:'DocTutorials — Ophthalmology',t:'yt',d:'Free Ophthalmology lectures. Good for clinical conditions and drugs.',u:'https://youtube.com/@DocTutorials',ul:'youtube.com/@DocTutorials'}
+],
+'Psychiatry':[
+{n:'PrepLadder — Psychiatry',t:'yt',d:'ICD-10 criteria, drug treatments, NMS, tardive dyskinesia. Exam-focused.',u:'https://youtube.com/@prepladder',ul:'youtube.com/@prepladder'},
+{n:'Marrow — Psychiatry',t:'yt',d:'Clinical psychiatry with case-based questions. Recent pattern covered.',u:'https://marrow.com',ul:'marrow.com'}
+],
+'Dermatology':[
+{n:'PrepLadder — Dermatology',t:'yt',d:'Image-based dermatology. Skin lesion patterns, STDs, leprosy, treatments.',u:'https://youtube.com/@prepladder',ul:'youtube.com/@prepladder'},
+{n:'DocTutorials — Dermatology',t:'yt',d:'Free dermatology. Strong for leprosy classification and STD management.',u:'https://youtube.com/@DocTutorials',ul:'youtube.com/@DocTutorials'}
+]
+};
+const ACHEIVEMENTS=[
+{id:'first_blood',icon:'⚔️',name:'First Blood',desc:'Complete your first study day',when:'Complete Day 1 objectives (80%+)',req:s=>s.dc>=1},
+{id:'streak3',icon:'🔥',name:'On Fire',desc:'3-day study streak',when:'Complete 3 consecutive days',req:s=>s.streak>=3},
+{id:'week1',icon:'🛡️',name:'Week Warrior',desc:'7-day streak — Week 1 done!',when:'Complete 7 consecutive days',req:s=>s.streak>=7},
+{id:'mcq100',icon:'💯',name:'MCQ Centurion',desc:'100 total MCQs logged',when:'Log 100+ total MCQs',req:s=>s.mcq>=100},
+{id:'mcq500',icon:'🔥',name:'500 Club',desc:'500 total MCQs logged',when:'Log 500+ total MCQs',req:s=>s.mcq>=500},
+{id:'mcq1000',icon:'⚡',name:'Thousand Blades',desc:'1000 MCQs solved — elite territory',when:'Log 1000+ total MCQs',req:s=>s.mcq>=1000},
+{id:'mcq5000',icon:'💎',name:'5K Legend',desc:'5000 MCQs — Sub-1000 is yours',when:'Log 5000+ total MCQs',req:s=>s.mcq>=5000},
+{id:'streak14',icon:'🌙',name:'Fortnight Fighter',desc:'14-day streak',when:'Complete 14 consecutive days',req:s=>s.streak>=14},
+{id:'streak30',icon:'🏅',name:'Iron Will',desc:'30-day streak — unstoppable',when:'Complete 30 consecutive days',req:s=>s.streak>=30},
+{id:'acc80',icon:'🎯',name:'Sharp Shooter',desc:'80%+ accuracy on a single day',when:'Score 80%+ accuracy on any logged MCQ day',req:s=>s.bestAcc>=80},
+{id:'acc90',icon:'🎖️',name:'Sniper',desc:'90%+ accuracy — exam-ready',when:'Score 90%+ accuracy on any logged MCQ day',req:s=>s.bestAcc>=90},
+{id:'phase1',icon:'✅',name:'Phase 1 Clear',desc:'Phase 1 complete (28 days)',when:'Complete Day 28 — June 21, 2026',req:s=>s.dc>=22},
+{id:'phase2',icon:'🔓',name:'Phase 2 Clear',desc:'Phase 2 complete — full coverage',when:'Complete Day 56 — July 19, 2026',req:s=>s.dc>=44},
+{id:'phase3',icon:'🚀',name:'Phase 3 Clear',desc:'Revision complete — ready to fly',when:'Complete Day 77 — August 9, 2026',req:s=>s.dc>=63},
+{id:'topics25',icon:'📖',name:'Topic Hunter',desc:'25 topics studied across all subjects',when:'Tick off 25 topics in Subject Arsenal',req:s=>s.topics>=25},
+{id:'topics100',icon:'🎓',name:'Encyclopedia',desc:'100 topics studied — comprehensive prep',when:'Tick off 100 topics in Subject Arsenal',req:s=>s.topics>=100},
+{id:'lvl5',icon:'⭐',name:'Rising Star',desc:'Reach Level 5',when:'Earn 3500 XP total (Level 5)',req:s=>s.lvl>=5},
+{id:'lvl10',icon:'👑',name:'NEET PG Champion',desc:'Level 10 — maximum rank!',when:'Earn 20000 XP total (Level 10)',req:s=>s.lvl>=10}
+];
+const SCH=[
+{d:1,p:'Phase 1',w:1,r:false,s:['Surgery'],dt:'Mon, May 25',o:[{id:'d1a',tx:'Surgery: GI tract, Esophagus, Stomach — watch full video lecture (2.5 hrs)',tg:['video'],xp:50},{id:'d1b',tx:'Surgery PYQ MCQs: GI Surgery — 50 questions, timed 35 min',tg:['mcq'],xp:60},{id:'d1c',tx:'Make notes: surgical eponyms, scoring systems & classic presentations',tg:['revision'],xp:30}]},
+{d:2,p:'Phase 1',w:1,r:false,s:['Surgery'],dt:'Tue, May 26',o:[{id:'d2a',tx:'Surgery: Small & Large Intestine, Appendix, Rectal Ca — video lecture',tg:['video'],xp:50},{id:'d2b',tx:'MCQs: Intestinal + Appendix Surgery — 50 questions',tg:['mcq'],xp:60},{id:'d2c',tx:'Revise Day 1 notes — surgical anatomy flashcards (30 min)',tg:['revision'],xp:30}]},
+{d:3,p:'Phase 1',w:1,r:false,s:['Surgery'],dt:'Wed, May 27',o:[{id:'d3a',tx:'Surgery: HPB — Liver, Biliary system, Pancreas — video lecture',tg:['video'],xp:50},{id:'d3b',tx:'MCQs: HPB Surgery — 50 questions',tg:['mcq'],xp:60},{id:'d3c',tx:'Evening revision: Days 1-2 wrong answers — root cause analysis (1 hr)',tg:['revision'],xp:40}]},
+{d:4,p:'Phase 1',w:1,r:false,s:['Surgery'],dt:'Thu, May 28',o:[{id:'d4a',tx:'Surgery: Breast, Thyroid, Head & Neck, Salivary glands',tg:['video'],xp:50},{id:'d4b',tx:'MCQs: Breast + Thyroid + H&N Surgery — 50 questions',tg:['mcq'],xp:60},{id:'d4c',tx:'Drug of choice in surgical conditions — build master table',tg:['revision'],xp:30}]},
+{d:5,p:'Phase 1',w:1,r:false,s:['Pathology'],dt:'Fri, May 29',o:[{id:'d5a',tx:'Pathology: Cell Injury, Inflammation, Wound Healing, Granulomas',tg:['video'],xp:50},{id:'d5b',tx:'MCQs: General Pathology — 50 questions',tg:['mcq'],xp:60},{id:'d5c',tx:'Revise Surgery flashcards (15 min) + start Pathology notes',tg:['revision'],xp:25}]},
+{d:6,p:'Phase 1',w:1,r:false,s:['Surgery','Pathology'],dt:'Sat, May 30',o:[{id:'d6a',tx:'Weekly Test: 100 mixed MCQs — Surgery + General Pathology (timed, 70 min)',tg:['test'],xp:100},{id:'d6b',tx:'Analyze ALL wrong answers — 2 hrs deep review, categorize mistakes',tg:['revision'],xp:80},{id:'d6c',tx:'Update error log notebook with missed concepts',tg:['revision'],xp:30}]},
+{d:7,p:'Phase 1',w:1,r:true,s:[],dt:'Sun, May 31',o:[{id:'d7r',tx:'REST DAY — Sleep 8+ hrs. Optional: 20 min light note reading only. No MCQs.',tg:['rest'],xp:20}]},
+{d:8,p:'Phase 1',w:2,r:false,s:['Surgery'],dt:'Mon, Jun 1',o:[{id:'d8a',tx:'Surgery: Hernia (all types), Abdominal wall, ATLS Trauma protocol',tg:['video'],xp:50},{id:'d8b',tx:'MCQs: Hernia + Trauma surgery — 50 questions',tg:['mcq'],xp:60},{id:'d8c',tx:'Revise Week 1 Surgery notes — eponyms & scoring systems',tg:['revision'],xp:30}]},
+{d:9,p:'Phase 1',w:2,r:false,s:['Surgery'],dt:'Tue, Jun 2',o:[{id:'d9a',tx:'Surgery: Urology — BPH, Ca bladder, Ca kidney, Ca prostate',tg:['video'],xp:50},{id:'d9b',tx:'Surgery: Vascular — AAA, Varicose veins, PAD, DVT, arterial injuries',tg:['video'],xp:40},{id:'d9c',tx:'MCQs: Urology + Vascular surgery — 50 questions',tg:['mcq'],xp:60}]},
+{d:10,p:'Phase 1',w:2,r:false,s:['Pathology'],dt:'Wed, Jun 3',o:[{id:'d10a',tx:'Pathology: Neoplasia — classification, spread, carcinogenesis, grading vs staging',tg:['video'],xp:50},{id:'d10b',tx:'Pathology: Haematology — all anemias, leukemias, lymphomas, myeloma',tg:['video'],xp:40},{id:'d10c',tx:'MCQs: Neoplasia + Haematology Path — 50 questions',tg:['mcq'],xp:60}]},
+{d:11,p:'Phase 1',w:2,r:false,s:['Pathology'],dt:'Thu, Jun 4',o:[{id:'d11a',tx:'Pathology: CVS, Respiratory, Renal Pathology — video lecture',tg:['video'],xp:50},{id:'d11b',tx:'MCQs: Systemic Pathology Part 1 — 50 questions',tg:['mcq'],xp:60},{id:'d11c',tx:'Histology image drill — 20 classic slides identification',tg:['revision'],xp:40}]},
+{d:12,p:'Phase 1',w:2,r:false,s:['Pathology'],dt:'Fri, Jun 5',o:[{id:'d12a',tx:'Pathology: GI, Liver, Endocrine, CNS, Female genital Pathology',tg:['video'],xp:50},{id:'d12b',tx:'MCQs: Systemic Pathology Part 2 — 50 questions',tg:['mcq'],xp:60},{id:'d12c',tx:'Pathology one-liner table: key lab values + tumor markers',tg:['revision'],xp:30}]},
+{d:13,p:'Phase 1',w:2,r:false,s:['Surgery','Pathology'],dt:'Sat, Jun 6',o:[{id:'d13a',tx:'Grand Test #1: 100 mixed MCQs — Surgery + Pathology timed',tg:['test'],xp:100},{id:'d13b',tx:'Error analysis: 2 hrs deep review of every wrong answer',tg:['revision'],xp:80},{id:'d13c',tx:'Score entry + weak subject identification',tg:['revision'],xp:30}]},
+{d:14,p:'Phase 1',w:2,r:true,s:[],dt:'Sun, Jun 7',o:[{id:'d14r',tx:'REST DAY — Full recovery. Plan Week 3 in evening (15 min only).',tg:['rest'],xp:20}]},
+{d:15,p:'Phase 1',w:3,r:false,s:['Pharmacology'],dt:'Mon, Jun 8',o:[{id:'d15a',tx:'Pharmacology: ANS — Adrenergic & Cholinergic drugs, mechanisms',tg:['video'],xp:50},{id:'d15b',tx:'MCQs: ANS Pharmacology — 60 questions',tg:['mcq'],xp:70},{id:'d15c',tx:'Drug tables: Agonists vs Antagonists comparison chart',tg:['revision'],xp:30}]},
+{d:16,p:'Phase 1',w:3,r:false,s:['Pharmacology'],dt:'Tue, Jun 9',o:[{id:'d16a',tx:'Pharmacology: CVS drugs — Antihypertensives, Antiarrhythmics, Anti-failure',tg:['video'],xp:50},{id:'d16b',tx:'MCQs: CVS Pharmacology — 60 questions',tg:['mcq'],xp:70},{id:'d16c',tx:'Drug of choice in CVS — master list compilation',tg:['revision'],xp:30}]},
+{d:17,p:'Phase 1',w:3,r:false,s:['Pharmacology'],dt:'Wed, Jun 10',o:[{id:'d17a',tx:'Pharmacology: Antibiotics — classifications, mechanisms, resistance patterns',tg:['video'],xp:50},{id:'d17b',tx:'Pharmacology: Antifungals, Antivirals, Anti-TB drugs',tg:['video'],xp:40},{id:'d17c',tx:'MCQs: Antimicrobials — 60 questions',tg:['mcq'],xp:70}]},
+{d:18,p:'Phase 1',w:3,r:false,s:['Medicine'],dt:'Thu, Jun 11',o:[{id:'d18a',tx:'Medicine: CVS — IHD, Acute MI, Heart failure, Hypertension management',tg:['video'],xp:50},{id:'d18b',tx:'MCQs: Cardiology — 60 clinical-type questions',tg:['mcq'],xp:70},{id:'d18c',tx:'Clinical drill: ECG pattern recognition — 10 practice strips',tg:['revision'],xp:40}]},
+{d:19,p:'Phase 1',w:3,r:false,s:['Medicine'],dt:'Fri, Jun 12',o:[{id:'d19a',tx:'Medicine: Respiratory — COPD, Asthma, TB (ATT), ILD, Pneumonia',tg:['video'],xp:50},{id:'d19b',tx:'MCQs: Respiratory Medicine — 60 questions',tg:['mcq'],xp:70},{id:'d19c',tx:'Pharmacology revision: Drug of choice master list review (30 min)',tg:['revision'],xp:30}]},
+{d:20,p:'Phase 1',w:3,r:false,s:['Pharmacology','Medicine'],dt:'Sat, Jun 13',o:[{id:'d20a',tx:'Grand Test #2: 150 mixed MCQs — Pharma + Surgery + Pathology (timed)',tg:['test'],xp:120},{id:'d20b',tx:'Error analysis: 2.5 hrs — categorize every wrong answer by topic',tg:['revision'],xp:90},{id:'d20c',tx:'Update error log + plan weak topic revision schedule',tg:['revision'],xp:30}]},
+{d:21,p:'Phase 1',w:3,r:true,s:[],dt:'Sun, Jun 14',o:[{id:'d21r',tx:'REST DAY — Essential mental recovery. Light walk. No screens after 8 PM.',tg:['rest'],xp:20}]},
+{d:22,p:'Phase 1',w:4,r:false,s:['Medicine'],dt:'Mon, Jun 15',o:[{id:'d22a',tx:'Medicine: Neurology — Stroke, TIA, Epilepsy, Meningitis, Headaches',tg:['video'],xp:50},{id:'d22b',tx:'MCQs: Neurology — 60 questions',tg:['mcq'],xp:70},{id:'d22c',tx:'Neuro mnemonics: NIHSS, GCS, CSF findings comparison table',tg:['revision'],xp:30}]},
+{d:23,p:'Phase 1',w:4,r:false,s:['Medicine'],dt:'Tue, Jun 16',o:[{id:'d23a',tx:'Medicine: GI + Hepatology — Hepatitis B&C, Cirrhosis, IBD, GI bleeding',tg:['video'],xp:50},{id:'d23b',tx:'MCQs: Gastroenterology + Hepatology — 60 questions',tg:['mcq'],xp:70},{id:'d23c',tx:'Child-Pugh, MELD score, CTP class — memorize table',tg:['revision'],xp:30}]},
+{d:24,p:'Phase 1',w:4,r:false,s:['Medicine'],dt:'Wed, Jun 17',o:[{id:'d24a',tx:'Medicine: Endocrinology — Diabetes all types, Thyroid, Cushing\'s, Addison\'s',tg:['video'],xp:50},{id:'d24b',tx:'MCQs: Endocrinology — 60 questions',tg:['mcq'],xp:70},{id:'d24c',tx:'Insulin types, anti-diabetic drugs, thyroid drugs — complete tables',tg:['revision'],xp:30}]},
+{d:25,p:'Phase 1',w:4,r:false,s:['Medicine'],dt:'Thu, Jun 18',o:[{id:'d25a',tx:'Medicine: Haematology — Anemias, Bleeding disorders, Leukemia, Lymphoma',tg:['video'],xp:50},{id:'d25b',tx:'Medicine: Nephrology — AKI, CKD, GN syndromes, Nephrotic syndrome',tg:['video'],xp:50},{id:'d25c',tx:'MCQs: Haematology + Nephrology — 60 questions',tg:['mcq'],xp:70}]},
+{d:26,p:'Phase 1',w:4,r:false,s:['OBG'],dt:'Fri, Jun 19',o:[{id:'d26a',tx:'OBG: Obstetrics — Normal labour, APH, PPH, PIH, Eclampsia',tg:['video'],xp:50},{id:'d26b',tx:'MCQs: Obstetrics — 60 questions',tg:['mcq'],xp:70},{id:'d26c',tx:'Obstetric emergencies: protocols + uterotonic drug doses',tg:['revision'],xp:30}]},
+{d:27,p:'Phase 1',w:4,r:false,s:['Mixed'],dt:'Sat, Jun 20',o:[{id:'d27a',tx:'Phase 1 Checkpoint: 150 MCQ mixed grand test (full timed)',tg:['test'],xp:130},{id:'d27b',tx:'Identify 3 weakest subjects and plan extra revision',tg:['revision'],xp:60},{id:'d27c',tx:'Phase 1 coverage check vs original schedule',tg:['revision'],xp:40}]},
+{d:28,p:'Phase 1',w:4,r:true,s:[],dt:'Sun, Jun 21',o:[{id:'d28r',tx:'REST DAY — Phase 1 COMPLETE! Major milestone. Celebrate and plan Phase 2.',tg:['rest'],xp:30}]},
+{d:29,p:'Phase 2',w:5,r:false,s:['OBG'],dt:'Mon, Jun 22',o:[{id:'d29a',tx:'OBG: Gynaecology — Menstrual disorders, PCOS, Endometriosis',tg:['video'],xp:50},{id:'d29b',tx:'OBG: Infertility — male & female causes, ART (IUI, IVF)',tg:['video'],xp:40},{id:'d29c',tx:'MCQs: Gynaecology Part 1 — 60 questions',tg:['mcq'],xp:70}]},
+{d:30,p:'Phase 2',w:5,r:false,s:['OBG'],dt:'Tue, Jun 23',o:[{id:'d30a',tx:'OBG: Gynaecological cancers — Ca cervix, Ca ovary, Ca endometrium',tg:['video'],xp:50},{id:'d30b',tx:'OBG: Contraception — all methods, failure rates, emergency contraception',tg:['video'],xp:40},{id:'d30c',tx:'MCQs: Gynaecology Part 2 + Obstetrics revision — 60 questions',tg:['mcq'],xp:70}]},
+{d:31,p:'Phase 2',w:5,r:false,s:['PSM'],dt:'Wed, Jun 24',o:[{id:'d31a',tx:'PSM: Epidemiology — study designs, validity, bias, confounding, P-value',tg:['video'],xp:50},{id:'d31b',tx:'PSM: Biostatistics — sensitivity, specificity, PPV, NNT, OR, RR formulas',tg:['video'],xp:50},{id:'d31c',tx:'MCQs: Epidemiology + Biostatistics — 60 questions',tg:['mcq'],xp:70}]},
+{d:32,p:'Phase 2',w:5,r:false,s:['PSM'],dt:'Thu, Jun 25',o:[{id:'d32a',tx:'PSM: National Health Programs — NHM, RNTCP, NVBDCP, RCH, RBSK',tg:['video'],xp:50},{id:'d32b',tx:'PSM: Nutrition, Demography, Occupational health, Health indices',tg:['video'],xp:40},{id:'d32c',tx:'MCQs: NHP + Nutrition + PSM misc — 60 questions',tg:['mcq'],xp:70}]},
+{d:33,p:'Phase 2',w:5,r:false,s:['Microbiology'],dt:'Fri, Jun 26',o:[{id:'d33a',tx:'Microbiology: Gram+ (Staph, Strep, Enterococcus) and Gram+ rods',tg:['video'],xp:50},{id:'d33b',tx:'Microbiology: Gram- rods — E.coli, Klebsiella, Pseudomonas, Salmonella',tg:['video'],xp:40},{id:'d33c',tx:'MCQs: Bacteriology Part 1 — 60 questions',tg:['mcq'],xp:70}]},
+{d:34,p:'Phase 2',w:5,r:false,s:['Mixed'],dt:'Sat, Jun 27',o:[{id:'d34a',tx:'Grand Test #3: 150 mixed MCQs — all subjects so far (timed)',tg:['test'],xp:130},{id:'d34b',tx:'Error analysis + spaced repetition revision of flagged topics (2.5 hrs)',tg:['revision'],xp:90},{id:'d34c',tx:'Update subject accuracy tracker for each subject',tg:['revision'],xp:30}]},
+{d:35,p:'Phase 2',w:5,r:true,s:[],dt:'Sun, Jun 28',o:[{id:'d35r',tx:'REST DAY — Week 5 complete. Recovery is training. Sleep well.',tg:['rest'],xp:20}]},
+{d:36,p:'Phase 2',w:6,r:false,s:['Microbiology'],dt:'Mon, Jun 29',o:[{id:'d36a',tx:'Microbiology: DNA viruses (Herpes, Adeno, Pox) + RNA viruses (HIV, Flu)',tg:['video'],xp:50},{id:'d36b',tx:'Microbiology: Hepatitis A, B, C, D, E — serology, markers',tg:['video'],xp:40},{id:'d36c',tx:'MCQs: Virology + Hepatitis — 60 questions',tg:['mcq'],xp:70}]},
+{d:37,p:'Phase 2',w:6,r:false,s:['Microbiology'],dt:'Tue, Jun 30',o:[{id:'d37a',tx:'Microbiology: Parasitology — Malaria, Entamoeba, Giardia, Leishmania',tg:['video'],xp:50},{id:'d37b',tx:'Microbiology: Mycology + Sterilization & Disinfection + Immunology',tg:['video'],xp:40},{id:'d37c',tx:'MCQs: Parasitology + Mycology + Immunology — 60 questions',tg:['mcq'],xp:70}]},
+{d:38,p:'Phase 2',w:6,r:false,s:['Paediatrics'],dt:'Wed, Jul 1',o:[{id:'d38a',tx:'Pediatrics: Neonatology — NNJ, RDS, NEC, birth asphyxia, APGAR score',tg:['video'],xp:50},{id:'d38b',tx:'Pediatrics: Nutrition — breastfeeding, weaning, PEM grades',tg:['video'],xp:40},{id:'d38c',tx:'MCQs: Neonatology + Paediatric Nutrition — 60 questions',tg:['mcq'],xp:70}]},
+{d:39,p:'Phase 2',w:6,r:false,s:['Paediatrics'],dt:'Thu, Jul 2',o:[{id:'d39a',tx:'Pediatrics: Immunization — UIP schedule, IAP 2024, AEFI, cold chain',tg:['video'],xp:40},{id:'d39b',tx:'Pediatrics: Infections, Genetic disorders, Developmental milestones',tg:['video'],xp:50},{id:'d39c',tx:'MCQs: Immunization + Development + Paeds infections — 60 questions',tg:['mcq'],xp:70}]},
+{d:40,p:'Phase 2',w:6,r:false,s:['Pharmacology'],dt:'Fri, Jul 3',o:[{id:'d40a',tx:'Pharmacology: CNS drugs — Antiepileptics, Antipsychotics, Antidepressants',tg:['video'],xp:50},{id:'d40b',tx:'Pharmacology: Analgesics — NSAIDs, COX-2, Opioids, Anaesthetics',tg:['video'],xp:40},{id:'d40c',tx:'MCQs: CNS + Analgesic Pharmacology — 60 questions',tg:['mcq'],xp:70}]},
+{d:41,p:'Phase 2',w:6,r:false,s:['Mixed'],dt:'Sat, Jul 4',o:[{id:'d41a',tx:'Grand Test #4: 150 MCQs — all subjects + 3 hr error analysis',tg:['test'],xp:130},{id:'d41b',tx:'Update weak subject list — prioritize for revision phase',tg:['revision'],xp:60},{id:'d41c',tx:'Pharmacology: Complete DOC master list rapid revision (1 hr)',tg:['revision'],xp:50}]},
+{d:42,p:'Phase 2',w:6,r:true,s:[],dt:'Sun, Jul 5',o:[{id:'d42r',tx:'REST DAY — Midway Phase 2. Stay consistent. Plan Week 7.',tg:['rest'],xp:20}]},
+{d:43,p:'Phase 2',w:7,r:false,s:['Anatomy'],dt:'Mon, Jul 6',o:[{id:'d43a',tx:'Anatomy: Neuroanatomy — cranial nerves, spinal cord tracts, internal capsule',tg:['video'],xp:50},{id:'d43b',tx:'Anatomy: Applied anatomy — incisions, nerve injuries, laparoscopic ports',tg:['video'],xp:40},{id:'d43c',tx:'MCQs: High-yield Anatomy — 50 questions (image-based)',tg:['mcq'],xp:60}]},
+{d:44,p:'Phase 2',w:7,r:false,s:['Physiology'],dt:'Tue, Jul 7',o:[{id:'d44a',tx:'Physiology: CVS + Respiratory physiology — cardiac cycle, lung mechanics',tg:['video'],xp:50},{id:'d44b',tx:'Physiology: Renal physiology — GFR, tubular functions, acid-base balance',tg:['video'],xp:40},{id:'d44c',tx:'MCQs: CVS + Respiratory + Renal Physiology — 50 questions',tg:['mcq'],xp:60}]},
+{d:45,p:'Phase 2',w:7,r:false,s:['Physiology'],dt:'Wed, Jul 8',o:[{id:'d45a',tx:'Physiology: Endocrine + Neurophysiology + GI physiology',tg:['video'],xp:50},{id:'d45b',tx:'MCQs: Endocrine + Neuro + GI Physiology — 50 questions',tg:['mcq'],xp:60},{id:'d45c',tx:'Normal values + physiological equations — master reference sheet',tg:['revision'],xp:30}]},
+{d:46,p:'Phase 2',w:7,r:false,s:['Biochemistry'],dt:'Thu, Jul 9',o:[{id:'d46a',tx:'Biochemistry: Metabolism — carbs, lipids, proteins, TCA cycle, HMP shunt',tg:['video'],xp:40},{id:'d46b',tx:'Biochemistry: Enzymes, Vitamins, Molecular biology, Inborn errors of metabolism',tg:['video'],xp:40},{id:'d46c',tx:'MCQs: Biochemistry high-yield — 50 questions',tg:['mcq'],xp:60}]},
+{d:47,p:'Phase 2',w:7,r:false,s:['Dermatology'],dt:'Fri, Jul 10',o:[{id:'d47a',tx:'Dermatology: Eczema, Psoriasis, Acne, Bullous disorders (Pemphigus)',tg:['video'],xp:40},{id:'d47b',tx:'Dermatology: STDs, Leprosy (Ridley-Jopling), Fungal infections, Skin tumors',tg:['video'],xp:40},{id:'d47c',tx:'MCQs: Dermatology + Venereology — 50 questions',tg:['mcq'],xp:60}]},
+{d:48,p:'Phase 2',w:7,r:false,s:['Mixed'],dt:'Sat, Jul 11',o:[{id:'d48a',tx:'Grand Test #5: FULL 200 MCQs — all subjects, 3.5 hrs strict exam conditions',tg:['test'],xp:180},{id:'d48b',tx:'Post-test analysis: 3 hrs — section-wise performance breakdown',tg:['revision'],xp:100},{id:'d48c',tx:'Record score, accuracy, rank estimate',tg:['revision'],xp:30}]},
+{d:49,p:'Phase 2',w:7,r:true,s:[],dt:'Sun, Jul 12',o:[{id:'d49r',tx:'REST DAY — First full 200-Q mock done! Rest and recover fully.',tg:['rest'],xp:30}]},
+{d:50,p:'Phase 2',w:8,r:false,s:['ENT'],dt:'Mon, Jul 13',o:[{id:'d50a',tx:'ENT: Ear — anatomy, otitis media, deafness, audiometry, tuning fork tests',tg:['video'],xp:40},{id:'d50b',tx:'ENT: Vertigo, BPPV, Meniere\'s, NPC, acoustic neuroma — high-yield',tg:['video'],xp:40},{id:'d50c',tx:'MCQs: ENT high-yield — 50 questions',tg:['mcq'],xp:60}]},
+{d:51,p:'Phase 2',w:8,r:false,s:['Ophthalmology'],dt:'Tue, Jul 14',o:[{id:'d51a',tx:'Ophthalmology: Glaucoma, Cataract, Retinal disorders (RD, DR, CRVO)',tg:['video'],xp:40},{id:'d51b',tx:'Ophthalmology: Uveitis, Optic nerve, Ophthalmic drugs, Ocular trauma',tg:['video'],xp:40},{id:'d51c',tx:'MCQs: Ophthalmology — 50 questions',tg:['mcq'],xp:60}]},
+{d:52,p:'Phase 2',w:8,r:false,s:['Psychiatry'],dt:'Wed, Jul 15',o:[{id:'d52a',tx:'Psychiatry: Schizophrenia, Mood disorders, Anxiety disorders, ICD-10 criteria',tg:['video'],xp:40},{id:'d52b',tx:'Psychiatry: Drug treatments, Substance use, NMS, serotonin syndrome',tg:['video'],xp:40},{id:'d52c',tx:'MCQs: Psychiatry — 50 questions',tg:['mcq'],xp:60}]},
+{d:53,p:'Phase 2',w:8,r:false,s:['Orthopaedics','FMT'],dt:'Thu, Jul 16',o:[{id:'d53a',tx:'Orthopaedics: Fractures, dislocations, complications, bone tumors',tg:['video'],xp:40},{id:'d53b',tx:'FMT: Medicolegal, Toxicology — OP, alcohol, arsenic, CO, IPC sections',tg:['video'],xp:40},{id:'d53c',tx:'MCQs: Orthopaedics + FMT — 50 questions',tg:['mcq'],xp:60}]},
+{d:54,p:'Phase 2',w:8,r:false,s:['Radiology','Anaesthesia'],dt:'Fri, Jul 17',o:[{id:'d54a',tx:'Radiology: Imaging signs (Cannonball, GGO, Silhouette), CT/MRI indications',tg:['video'],xp:35},{id:'d54b',tx:'Anaesthesia: GA stages, MAC, IV agents, muscle relaxants, regional anaesthesia',tg:['video'],xp:35},{id:'d54c',tx:'MCQs: Radiology + Anaesthesia — 40 questions. Begin Phase 3 revision plan.',tg:['mcq'],xp:50}]},
+{d:55,p:'Phase 2',w:8,r:false,s:['Mixed'],dt:'Sat, Jul 18',o:[{id:'d55a',tx:'Grand Test #6: FULL 200 MCQs — strict exam simulation (timed)',tg:['test'],xp:180},{id:'d55b',tx:'Error analysis — compare performance with GT#5, identify improvement',tg:['revision'],xp:100},{id:'d55c',tx:'Phase 2 complete — list subjects covered, note remaining gaps',tg:['revision'],xp:50}]},
+{d:56,p:'Phase 2',w:8,r:true,s:[],dt:'Sun, Jul 19',o:[{id:'d56r',tx:'REST DAY — Phase 2 COMPLETE! You have covered the entire syllabus. Rest fully.',tg:['rest'],xp:50}]},
+{d:57,p:'Phase 3',w:9,r:false,s:['Surgery','Medicine'],dt:'Mon, Jul 20',o:[{id:'d57a',tx:'Surgery rapid revision — notes only, no new videos. Focus on weak chapters.',tg:['revision'],xp:60},{id:'d57b',tx:'MCQs: Surgery PYQ — last 5 years, 80 questions timed',tg:['mcq'],xp:80},{id:'d57c',tx:'Bookmark all weak Surgery topics for extra PYQ drill this week',tg:['revision'],xp:30}]},
+{d:58,p:'Phase 3',w:9,r:false,s:['Medicine'],dt:'Tue, Jul 21',o:[{id:'d58a',tx:'Medicine rapid revision: CVS + Respiratory + Neurology notes review',tg:['revision'],xp:60},{id:'d58b',tx:'MCQs: Medicine Part 1 PYQ — 80 clinical case questions',tg:['mcq'],xp:80},{id:'d58c',tx:'Clinical drill: emergency algorithms — sepsis, MI, stroke, DKA',tg:['revision'],xp:40}]},
+{d:59,p:'Phase 3',w:9,r:false,s:['Pharmacology'],dt:'Wed, Jul 22',o:[{id:'d59a',tx:'Pharmacology rapid revision — all drug tables, DOC lists, side effects',tg:['revision'],xp:60},{id:'d59b',tx:'MCQs: Pharmacology PYQ — 80 questions',tg:['mcq'],xp:80},{id:'d59c',tx:'Drugs in pregnancy, special populations, contraindications revision',tg:['revision'],xp:40}]},
+{d:60,p:'Phase 3',w:9,r:false,s:['Pathology'],dt:'Thu, Jul 23',o:[{id:'d60a',tx:'Pathology rapid revision — systemic pathology notes, histology slides',tg:['revision'],xp:60},{id:'d60b',tx:'MCQs: Pathology PYQ — 80 questions (image-based focus)',tg:['mcq'],xp:80},{id:'d60c',tx:'Lab values + tumor markers master table final revision',tg:['revision'],xp:30}]},
+{d:61,p:'Phase 3',w:9,r:false,s:['Medicine'],dt:'Fri, Jul 24',o:[{id:'d61a',tx:'Medicine revision: GI + Endocrine + Renal + Haematology + Rheumatology',tg:['revision'],xp:60},{id:'d61b',tx:'MCQs: Medicine Part 2 PYQ — 80 questions',tg:['mcq'],xp:80},{id:'d61c',tx:'Emergency medicine critical values and decision-making protocols',tg:['revision'],xp:30}]},
+{d:62,p:'Phase 3',w:9,r:false,s:['Mixed'],dt:'Sat, Jul 25',o:[{id:'d62a',tx:'Grand Test #7: FULL 200 MCQs — Target 65%+ accuracy',tg:['test'],xp:180},{id:'d62b',tx:'Weak area intensive drill — 3 hrs on lowest-scoring subjects',tg:['revision'],xp:100},{id:'d62c',tx:'Plot accuracy improvement curve — compare all Grand Tests',tg:['revision'],xp:30}]},
+{d:63,p:'Phase 3',w:9,r:true,s:[],dt:'Sun, Jul 26',o:[{id:'d63r',tx:'REST DAY — Crunch phase. Rest is memory consolidation. Non-negotiable.',tg:['rest'],xp:20}]},
+{d:64,p:'Phase 3',w:10,r:false,s:['OBG'],dt:'Mon, Jul 27',o:[{id:'d64a',tx:'OBG rapid revision — Obstetrics: labour, emergencies, fetal monitoring',tg:['revision'],xp:60},{id:'d64b',tx:'MCQs: Obstetrics PYQ — 80 clinical questions',tg:['mcq'],xp:80},{id:'d64c',tx:'DOC in all obstetric conditions — verbal rapid-fire drill',tg:['revision'],xp:30}]},
+{d:65,p:'Phase 3',w:10,r:false,s:['OBG'],dt:'Tue, Jul 28',o:[{id:'d65a',tx:'OBG Gynaecology revision — cancers, PCOS, infertility, contraception',tg:['revision'],xp:60},{id:'d65b',tx:'MCQs: Gynaecology PYQ — 80 questions',tg:['mcq'],xp:80},{id:'d65c',tx:'Contraception failure rates + OCP side effects complete revision',tg:['revision'],xp:30}]},
+{d:66,p:'Phase 3',w:10,r:false,s:['PSM'],dt:'Wed, Jul 29',o:[{id:'d66a',tx:'PSM rapid revision — all formulas: sensitivity, AR, RR, OR, NNT verbal drill',tg:['revision'],xp:60},{id:'d66b',tx:'PSM: All National Health Programs rapid-fire revision',tg:['revision'],xp:50},{id:'d66c',tx:'MCQs: PSM PYQ — 80 questions',tg:['mcq'],xp:80}]},
+{d:67,p:'Phase 3',w:10,r:false,s:['Paediatrics','Microbiology'],dt:'Thu, Jul 30',o:[{id:'d67a',tx:'Pediatrics revision — immunization, growth charts, milestones, neonatal',tg:['revision'],xp:50},{id:'d67b',tx:'Microbiology revision — organism-disease pairs, lab diagnosis',tg:['revision'],xp:50},{id:'d67c',tx:'MCQs: Paeds + Micro PYQ — 80 questions',tg:['mcq'],xp:80}]},
+{d:68,p:'Phase 3',w:10,r:false,s:['ENT','Ophthalmology','Dermatology','Psychiatry'],dt:'Fri, Jul 31',o:[{id:'d68a',tx:'ENT + Ophthalmology rapid notes revision — operations, signs, drugs',tg:['revision'],xp:50},{id:'d68b',tx:'Dermatology + Psychiatry rapid revision — diagnostic criteria, drugs',tg:['revision'],xp:50},{id:'d68c',tx:'MCQs: ENT + Ophth + Derm + Psych — 80 questions',tg:['mcq'],xp:80}]},
+{d:69,p:'Phase 3',w:10,r:false,s:['Mixed'],dt:'Sat, Aug 1',o:[{id:'d69a',tx:'Grand Test #8: FULL 200 MCQs — Target 70%+ accuracy',tg:['test'],xp:200},{id:'d69b',tx:'Comprehensive error analysis — 3 hrs deep review',tg:['revision'],xp:100},{id:'d69c',tx:'Identify final weak topics for last sprint',tg:['revision'],xp:40}]},
+{d:70,p:'Phase 3',w:10,r:true,s:[],dt:'Sun, Aug 2',o:[{id:'d70r',tx:'REST DAY — 28 days to exam. Stay sharp, stay rested.',tg:['rest'],xp:20}]},
+{d:71,p:'Phase 3',w:11,r:false,s:['Surgery','Anatomy'],dt:'Mon, Aug 3',o:[{id:'d71a',tx:'Surgery + Anatomy PYQ marathon — last 5 years, 100 MCQs timed',tg:['mcq'],xp:100},{id:'d71b',tx:'Surgery rapid fire: all eponyms + instruments + scoring systems',tg:['revision'],xp:50},{id:'d71c',tx:'Anatomy: Cranial nerves + applied anatomy one-liner sheet',tg:['revision'],xp:40}]},
+{d:72,p:'Phase 3',w:11,r:false,s:['Medicine','Physiology'],dt:'Tue, Aug 4',o:[{id:'d72a',tx:'Medicine + Physiology PYQ marathon — 100 clinical case MCQs',tg:['mcq'],xp:100},{id:'d72b',tx:'Medicine: Emergency algorithms — sepsis, MI, stroke, DKA rapid review',tg:['revision'],xp:50},{id:'d72c',tx:'Physiology: Normal values + equations master reference final',tg:['revision'],xp:40}]},
+{d:73,p:'Phase 3',w:11,r:false,s:['Pharmacology','Biochemistry'],dt:'Wed, Aug 5',o:[{id:'d73a',tx:'Pharmacology + Biochemistry PYQ marathon — 100 MCQs',tg:['mcq'],xp:100},{id:'d73b',tx:'Pharma: DOC complete verbal rapid-fire drill',tg:['revision'],xp:50},{id:'d73c',tx:'Biochemistry: Metabolic pathway disorders one-liner table final',tg:['revision'],xp:40}]},
+{d:74,p:'Phase 3',w:11,r:false,s:['OBG','Paediatrics','Microbiology'],dt:'Thu, Aug 6',o:[{id:'d74a',tx:'OBG + Paeds + Micro PYQ marathon — 100 MCQs',tg:['mcq'],xp:100},{id:'d74b',tx:'One-liners: OBG + Paeds — high-yield verbal rapid-fire drill',tg:['revision'],xp:50},{id:'d74c',tx:'Microbiology: Organism-to-antibiotic sensitivity table final revision',tg:['revision'],xp:40}]},
+{d:75,p:'Phase 3',w:11,r:false,s:['PSM','Pathology'],dt:'Fri, Aug 7',o:[{id:'d75a',tx:'PSM + Pathology PYQ marathon — 100 MCQs',tg:['mcq'],xp:100},{id:'d75b',tx:'PSM: All statistical formulas verbal rapid-fire drill',tg:['revision'],xp:50},{id:'d75c',tx:'Make final "must-revise" sheet — 1 page per subject (all 19 subjects)',tg:['revision'],xp:50}]},
+{d:76,p:'Phase 3',w:11,r:false,s:['Mixed'],dt:'Sat, Aug 8',o:[{id:'d76a',tx:'Grand Test #9: FULL 200 MCQs — Target 72%+ accuracy',tg:['test'],xp:200},{id:'d76b',tx:'Error analysis + final weak-subject priority list',tg:['revision'],xp:100},{id:'d76c',tx:'Finalize one-liner revision sheets for all subjects',tg:['revision'],xp:60}]},
+{d:77,p:'Phase 3',w:11,r:true,s:[],dt:'Sun, Aug 9',o:[{id:'d77r',tx:'REST DAY — Phase 3 COMPLETE! You have revised everything twice. Trust the process.',tg:['rest'],xp:50}]},
+{d:78,p:'Phase 4',w:12,r:false,s:['Weak Areas'],dt:'Mon, Aug 10',o:[{id:'d78a',tx:'Target 2 weakest subjects ONLY — intensive focused notes revision',tg:['revision'],xp:80},{id:'d78b',tx:'MCQs: 100 questions from weak subjects only (no other subjects)',tg:['mcq'],xp:100},{id:'d78c',tx:'No new topics. Consolidate only. Trust what you have built.',tg:['revision'],xp:40}]},
+{d:79,p:'Phase 4',w:12,r:false,s:['Mixed'],dt:'Tue, Aug 11',o:[{id:'d79a',tx:'Grand Test #10: FULL 200 MCQs — Final mock (strict exam conditions)',tg:['test'],xp:200},{id:'d79b',tx:'Review ONLY wrong answers — do not revisit correct ones',tg:['revision'],xp:80},{id:'d79c',tx:'Build "exam-day key concepts" recall list for morning review',tg:['revision'],xp:40}]},
+{d:80,p:'Phase 4',w:12,r:false,s:['PYQ'],dt:'Wed, Aug 12',o:[{id:'d80a',tx:'PYQ Marathon: Last 3 years NEET PG papers — 80–100 MCQs with analysis',tg:['mcq'],xp:100},{id:'d80b',tx:'Identify high-frequency repeating patterns across papers',tg:['revision'],xp:60},{id:'d80c',tx:'Update revision sheet with any last missed high-yield topics',tg:['revision'],xp:40}]},
+{d:81,p:'Phase 4',w:12,r:false,s:['Mixed'],dt:'Thu, Aug 13',o:[{id:'d81a',tx:'Grand Test #11 (Half): 100 MCQs — 1 hr 45 min strictly timed',tg:['test'],xp:120},{id:'d81b',tx:'Review critical wrongs from entire Grand Test series',tg:['revision'],xp:80},{id:'d81c',tx:'Read one-liner sheets: Surgery + Medicine + OBG + PSM',tg:['revision'],xp:50}]},
+{d:82,p:'Phase 4',w:12,r:false,s:['All'],dt:'Fri, Aug 14',o:[{id:'d82a',tx:'Light reading: One-liner sheets for all remaining subjects (no pressure)',tg:['revision'],xp:60},{id:'d82b',tx:'20 selective MCQs from your personal error log only',tg:['mcq'],xp:40},{id:'d82c',tx:'Logistics: Hall ticket, ID proof, stationery ready. Sleep by 9:30 PM.',tg:['revision'],xp:30}]},
+{d:83,p:'Phase 4',w:12,r:true,s:[],dt:'Sat, Aug 15',o:[{id:'d83r',tx:'BUFFER / REST DAY — Syllabus 100% complete. Light notes only. Sleep 8+ hrs. YOU ARE READY.',tg:['rest'],xp:100}]}
+];
+// STATE
+function loadST(){try{const s=localStorage.getItem('neetpg_v3');if(s)return JSON.parse(s);}catch(e){}return{co:{},mq:{},notes:{},ts:{},mAtt:0,mCor:0,bestAcc:0,bestRank:null,unl:[],curDay:1};}
+let ST=loadST();
+let vDay=ST.curDay||1;
+let aSubj=Object.keys(SUBJS)[0];
+let aRes='All';
+function save(){try{localStorage.setItem('neetpg_v3',JSON.stringify(ST));}catch(e){}}
+function todayNum(){return Math.min(Math.max(Math.floor((new Date()-START)/86400000)+1,1),83);}
+function getD(n){return SCH.find(d=>d.d===n);}
+function getProg(n){const d=getD(n);if(!d)return{done:0,tot:0,pct:0};const c=ST.co[n]||{};const tot=d.o.length;const done=d.o.filter(o=>c[o.id]).length;return{done,tot,pct:tot?(done/tot)*100:0};}
+function getDone(){return SCH.filter(d=>getProg(d.d).pct>=80).length;}
+function getTopics(){return Object.values(ST.ts).filter(Boolean).length;}
+function getStreak(){let s=0;const t=new Date();t.setHours(23,59,59,999);for(let i=SCH.length-1;i>=0;i--){const d=SCH[i];const dt=new Date(START);dt.setDate(dt.getDate()+d.d-1);if(dt>t)continue;if(getProg(d.d).pct>=80)s++;else break;}return s;}
+function getTXP(){let x=0;SCH.forEach(d=>{const c=ST.co[d.d]||{};d.o.forEach(o=>{if(c[o.id])x+=(o.xp||50);});});return x;}
+function calcLvl(x){let l=LEVELS[0];for(let i=LEVELS.length-1;i>=0;i--){if(x>=LEVELS[i].x){l=LEVELS[i];break;}}return l;}
+function getNextLvl(x){return LEVELS.find(l=>l.x>x)||LEVELS[LEVELS.length-1];}
+function getSubjPct(s){const t=SUBJS[s]?.t||[];if(!t.length)return 0;return Math.round((t.filter(tp=>ST.ts[tp.id]).length/t.length)*100);}
+function getOverallPct(){const all=Object.values(SUBJS).flatMap(s=>s.t);if(!all.length)return 0;return Math.round((all.filter(t=>ST.ts[t.id]).length/all.length)*100);}
+function getProj(){const dc=getDone(),ts=getTopics(),acc=ST.mAtt>0?(ST.mCor/ST.mAtt)*100:50;if(dc===0&&ts===0)return null;const p=dc/83,tp=ts/Object.values(SUBJS).flatMap(s=>s.t).length,af=acc/100;return Math.max(Math.round(50000*(1-p*0.55)*(1-tp*0.15)*(1-af*0.3)),200);}
+function getAD(){return{dc:getDone(),streak:getStreak(),mcq:ST.mAtt,bestAcc:ST.bestAcc||0,topics:getTopics(),lvl:calcLvl(getTXP()).l};}
+
+// RENDER HUD
+function rHUD(){
+  const xp=getTXP(),lv=calcLvl(xp),nx=getNextLvl(xp),streak=getStreak(),dc=getDone();
+  const dLeft=Math.max(0,Math.ceil((EXAM-new Date())/86400000));
+  document.getElementById('hLvl').textContent=lv.l;
+  document.getElementById('hXP').textContent=xp>=1000?(xp/1000).toFixed(1)+'K':xp;
+  document.getElementById('hDays').textContent=dc;
+  document.getElementById('hMCQ').textContent=ST.mAtt>=1000?(ST.mAtt/1000).toFixed(1)+'K':ST.mAtt;
+  document.getElementById('hLeft').textContent=dLeft;
+  document.getElementById('hStreak').textContent=streak;
+  const xi=xp-lv.x,xn=nx.x-lv.x;
+  document.getElementById('xpLbl').textContent='LVL '+lv.l+' — '+lv.n.toUpperCase();
+  document.getElementById('xpNext').textContent=xi.toLocaleString()+'/'+(xn).toLocaleString()+' XP';
+  document.getElementById('xpFill').style.width=(xn>0?(xi/xn)*100:100)+'%';
+}
+
+// RENDER MISSION MAP
+function rMission(){
+  const pc={'Phase 1':'#00d4ff','Phase 2':'#00ff88','Phase 3':'#ffd700','Phase 4':'#b44fff'};
+  let h='',lp='';
+  SCH.forEach(d=>{
+    if(d.p!==lp){lp=d.p;h+=`<div class="phase-h" style="color:${pc[d.p]||'#7a9cbf'}">${d.p}</div>`;}
+    const pg=getProg(d.d),ia=d.d===vDay,id=pg.pct>=80;
+    h+=`<div class="mi ${ia?'active':id?'done':d.r?'rest-d':''}" onclick="goDay(${d.d})">
+      <div class="mdot"></div>
+      <div style="flex:1;min-width:0">
+        <div class="mn">Day ${d.d} &middot; ${d.dt}</div>
+        <div class="ms">${d.r?'🟣 Rest Day':(d.s.slice(0,2).join(' + ')||'Review')}</div>
+      </div>
+      <div class="mp">${id?'<span style="color:var(--green)">✓</span>':(pg.tot>0?Math.round(pg.pct)+'%':'')}</div>
+    </div>`;
+  });
+  document.getElementById('mList').innerHTML=h;
+  document.getElementById('mProg').textContent=getDone()+'/83';
+  setTimeout(()=>{const a=document.querySelector('.mi.active');if(a)a.scrollIntoView({block:'nearest',behavior:'smooth'});},60);
+}
+
+// RENDER WEEK GRID
+function rWeek(){
+  const cur=getD(vDay),wk=cur?cur.w:1;
+  const wd=SCH.filter(x=>x.w===wk);
+  document.getElementById('wLbl').textContent='WEEK '+wk;
+  let h='';
+  wd.forEach(x=>{
+    const pg=getProg(x.d),ia=x.d===vDay,id=pg.pct>=80,ip=pg.pct>0&&pg.pct<80;
+    let cls=x.r?'rest':'future';
+    if(ia)cls='today';else if(id)cls='done';else if(ip)cls='partial';
+    h+=`<div class="wday ${cls}" onclick="goDay(${x.d})">
+      <div class="wn">${x.d}</div>
+      <div class="wl">${x.dt.split(',')[0]}</div>
+      ${id?'<div style="font-size:7px;color:var(--green);margin-top:1px">✓</div>':x.r?'<div style="font-size:7px;color:var(--purple);margin-top:1px">R</div>':''}
+    </div>`;
+  });
+  document.getElementById('wGrid').innerHTML=h;
+}
+
+// RENDER OBJECTIVES
+function rObjs(){
+  const d=getD(vDay);
+  if(!d){document.getElementById('oList').innerHTML='<div style="padding:14px;color:var(--text3);text-align:center;font-size:12px">Day not found</div>';return;}
+  document.getElementById('dTitle').textContent='DAY '+d.d+' — '+d.dt.toUpperCase();
+  document.getElementById('dSub').textContent=d.p.toUpperCase()+' · WEEK '+d.w;
+  const pg=getProg(d.d);
+  document.getElementById('dPct').textContent=pg.done+'/'+pg.tot;
+  document.getElementById('dPF').style.width=pg.pct+'%';
+  const c=ST.co[d.d]||{};
+  const tMap={'video':'tv','mcq':'tm','revision':'tr','test':'tt','rest':'tt'};
+  let h='';
+  d.o.forEach(o=>{
+    const done=!!c[o.id],isRest=o.tg.includes('rest');
+    const tags=o.tg.map(t=>`<span class="otag ${tMap[t]||'tr'}">${t.toUpperCase()}</span>`).join('');
+    h+=`<div class="oc ${done?'done':''} ${isRest?'rcard':''}" onclick="${isRest?'':'toggleO('+d.d+',\''+o.id+'\','+o.xp+')'}">
+      <div class="ochk"><div class="ochkm">✓</div></div>
+      <div style="flex:1"><div class="otxt">${o.tx}</div><div class="otags">${tags}</div></div>
+      <div class="txp">+${o.xp}XP</div>
+    </div>`;
+  });
+  document.getElementById('oList').innerHTML=h;
+  const mq=ST.mq[vDay]||{};
+  document.getElementById('mqA').value=mq.att||'';
+  document.getElementById('mqC').value=mq.cor||'';
+  document.getElementById('dNotes').value=ST.notes[vDay]||'';
+  updMQ();
+}
+
+// RENDER SUBJECT ARSENAL
+function rSubj(){
+  const sk=Object.keys(SUBJS);
+  document.getElementById('sTabs').innerHTML=sk.map(s=>`<div class="stab ${s===aSubj?'active':''}" onclick="setSubj('${s}')">${s}</div>`).join('');
+  const pct=getSubjPct(aSubj),col=SUBJS[aSubj]?.c||'var(--cyan)';
+  document.getElementById('sPF').style.width=pct+'%';
+  document.getElementById('sPF').style.background=col;
+  document.getElementById('sPct').textContent=pct+'%';
+  document.getElementById('sPct').style.color=col;
+  document.getElementById('saPct').textContent=getOverallPct()+'% overall';
+  const topics=SUBJS[aSubj]?.t||[];
+  document.getElementById('tList').innerHTML=topics.map(t=>{
+    const done=!!ST.ts[t.id];
+    return`<div class="ti ${done?'done':''}" onclick="toggleT('${t.id}')">
+      <div class="tchk"><div class="tchkm">✓</div></div>
+      <div class="tn">${t.n}</div>
+      <div class="tcat">${t.cat}</div>
+    </div>`;
+  }).join('');
+}
+
+// RENDER ACHIEVEMENTS
+function rAch(){
+  const ad=getAD();let ul=0;
+  const h=ACHEIVEMENTS.map(a=>{
+    const ok=a.req(ad);if(ok)ul++;
+    return`<div class="ai ${ok?'unlocked':'locked'}">
+      <div class="aico">${a.icon}</div>
+      <div class="ainfo">
+        <div class="an">${a.name}</div>
+        <div class="ad">${a.desc}</div>
+        <div class="aw">${ok?'✅ UNLOCKED!':a.when}</div>
+      </div>
+      <div class="abadge ${ok?'unlocked':'locked'}">${ok?'DONE':'LOCKED'}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('aList').innerHTML=h;
+  document.getElementById('achCnt').textContent=ul+'/'+ACHEIVEMENTS.length;
+}
+
+// RENDER RESOURCES
+function rRes(){
+  const tabs=['All','Surgery','Medicine','OBG','PSM','Pharmacology','Pathology','Microbiology','Paediatrics','Anatomy','Physiology','ENT','Ophthalmology','Psychiatry','Dermatology'];
+  document.getElementById('rTabs').innerHTML=tabs.map(t=>`<div class="rtab ${t===aRes?'active':''}" onclick="setRes('${t}')">${t}</div>`).join('');
+  const rs=RESOURCES[aRes]||[];
+  document.getElementById('rList').innerHTML=rs.map(r=>`<a class="rcard" href="${r.u}" target="_blank" rel="noopener">
+    <div class="rct"><div class="rn">${r.n}</div><div class="rtype ${r.t}">${r.t.toUpperCase()}</div></div>
+    <div class="rd">${r.d}</div>
+    <div class="ru">↗ ${r.ul}</div>
+  </a>`).join('');
+}
+
+// RENDER GAUGE
+function rGauge(){
+  const rank=getProj();
+  if(!rank){document.getElementById('gVal').textContent='—';document.getElementById('gSub').textContent='Complete objectives to unlock';return;}
+  const gv=document.getElementById('gVal'),gs=document.getElementById('gSub');
+  gv.textContent=rank<=1000?rank.toLocaleString()+' 🎯':rank.toLocaleString();
+  gv.style.color=rank<=1000?'var(--green)':rank<=3000?'var(--gold)':'var(--red)';
+  gs.textContent=rank<=1000?'🎯 ON TARGET! Keep pushing!':rank<=3000?'Getting there — push MCQ accuracy!':'Boost consistency & daily MCQ count';
+  gs.style.color=rank<=1000?'var(--green)':rank<=3000?'var(--gold)':'var(--red)';
+  const pct=Math.max(0,Math.min(1,1-(rank/50000)));
+  const gp=document.getElementById('gPath');if(gp)gp.style.strokeDashoffset=196-(196*pct);
+  if(!ST.bestRank||rank<ST.bestRank){ST.bestRank=rank;save();}
+  document.getElementById('bestR').textContent=ST.bestRank?ST.bestRank.toLocaleString():'—';
+}
+
+// RENDER COUNTDOWN
+function rCD(){
+  const diff=EXAM-new Date();
+  if(diff<=0){['cdD','cdH','cdM','cdS'].forEach(id=>document.getElementById(id).textContent='00');document.getElementById('cdMsg').textContent='EXAM DAY! All the best! 🚀';return;}
+  const days=Math.floor(diff/86400000),hrs=Math.floor((diff%86400000)/3600000),min=Math.floor((diff%3600000)/60000),sec=Math.floor((diff%60000)/1000);
+  document.getElementById('cdD').textContent=String(days).padStart(2,'0');
+  document.getElementById('cdH').textContent=String(hrs).padStart(2,'0');
+  document.getElementById('cdM').textContent=String(min).padStart(2,'0');
+  document.getElementById('cdS').textContent=String(sec).padStart(2,'0');
+  document.getElementById('cdMsg').textContent=days<=7?'🔴 FINAL STRETCH!':days<=30?'🟡 CRUNCH TIME!':'🟢 Stay consistent every day!';
+}
+
+function rAll(){rHUD();rMission();rWeek();rObjs();rSubj();rAch();rRes();rGauge();}
+
+// INTERACTIONS
+function goDay(n){vDay=n;ST.curDay=n;save();rAll();}
+function chDay(d){const n=vDay+d;if(n>=1&&n<=83)goDay(n);}
+function setSubj(s){aSubj=s;rSubj();}
+function setRes(s){aRes=s;rRes();}
+
+function toggleO(dayNum,objId,xp){
+  if(!ST.co[dayNum])ST.co[dayNum]={};
+  const was=ST.co[dayNum][objId];
+  ST.co[dayNum][objId]=!was;
+  if(!was){
+    const px=getTXP()-xp,nx=getTXP(),pl=calcLvl(px),nl=calcLvl(nx);
+    toast('+'+xp+' XP earned!','gold');
+    burst(event.clientX,event.clientY);
+    if(nl.l>pl.l)setTimeout(()=>{document.getElementById('lvtxt').textContent='Level '+nl.l+' — '+nl.n+'!';document.getElementById('lvo').style.display='flex';burst(window.innerWidth/2,window.innerHeight/2,25);},500);
+  }
+  save();chkAch();rAll();
+}
+
+function toggleT(tid){
+  ST.ts[tid]=!ST.ts[tid];
+  if(ST.ts[tid]){toast('Topic studied! ✓','gold');burst(event.clientX,event.clientY,8);}
+  save();chkAch();rAll();
+}
+
+function updMQ(){
+  const att=parseInt(document.getElementById('mqA').value)||0;
+  const cor=parseInt(document.getElementById('mqC').value)||0;
+  const acc=att>0?Math.round((cor/att)*100):0;
+  document.getElementById('mTod').textContent=att;
+  document.getElementById('mqAF').style.width=acc+'%';
+  document.getElementById('mqAF').style.background=acc>=80?'var(--green)':acc>=60?'var(--gold)':'var(--red)';
+  document.getElementById('mqAL').textContent=att>0?acc+'% accuracy — '+cor+'/'+att+' correct':'Enter your MCQ data above';
+  document.getElementById('accBadge').textContent=att>0?acc+'% ACC':'-- % ACC';
+  const pv=ST.mq[vDay]||{};
+  const rt=ST.mAtt-(pv.att||0)+att,rc=ST.mCor-(pv.cor||0)+cor;
+  document.getElementById('mTot').textContent=rt;
+  document.getElementById('mAcc').textContent=(rt>0?Math.round((rc/rt)*100):0)+'%';
+}
+
+function saveMQ(){
+  const att=parseInt(document.getElementById('mqA').value)||0;
+  const cor=parseInt(document.getElementById('mqC').value)||0;
+  const acc=att>0?Math.round((cor/att)*100):0;
+  const pv=ST.mq[vDay]||{};
+  ST.mAtt=Math.max(0,ST.mAtt-(pv.att||0)+att);
+  ST.mCor=Math.max(0,ST.mCor-(pv.cor||0)+cor);
+  ST.mq[vDay]={att,cor,acc};
+  ST.notes[vDay]=document.getElementById('dNotes').value;
+  if(acc>=(ST.bestAcc||0))ST.bestAcc=acc;
+  save();chkAch();
+  toast('Battle logged! '+att+' MCQs · '+acc+'% accuracy','gold');
+  rAll();
+}
+
+// GAMIFICATION
+function toast(msg,type='default'){
+  const c=document.getElementById('tc');
+  const t=document.createElement('div');
+  t.className='toast '+(type==='gold'?'gold':type==='purple'?'purple':'');
+  t.innerHTML='<span style="font-size:15px">'+(type==='gold'?'⚡':type==='purple'?'🌟':'✅')+'</span><span>'+msg+'</span>';
+  c.appendChild(t);
+  setTimeout(()=>{t.style.animation='tOut 0.3s forwards';setTimeout(()=>t.remove(),300);},3000);
+}
+
+function burst(x,y,n=14){
+  const cols=['#00d4ff','#ffd700','#00ff88','#b44fff','#ff4455','#ff8c00'];
+  for(let i=0;i<n;i++){
+    const p=document.createElement('div');p.className='part';
+    const sz=Math.random()*7+4,ang=(Math.PI*2*i)/n+Math.random()*0.5,dist=Math.random()*90+50;
+    p.style.cssText='left:'+x+'px;top:'+y+'px;width:'+sz+'px;height:'+sz+'px;background:'+cols[Math.floor(Math.random()*cols.length)]+';--tx:'+Math.cos(ang)*dist+'px;--ty:'+Math.sin(ang)*dist+'px;animation-duration:'+(0.5+Math.random()*0.4)+'s;';
+    document.body.appendChild(p);setTimeout(()=>p.remove(),900);
+  }
+}
+
+function chkAch(){
+  const ad=getAD();let newU=false;
+  ACHEIVEMENTS.forEach(a=>{
+    if(!ST.unl.includes(a.id)&&a.req(ad)){
+      ST.unl.push(a.id);newU=true;
+      setTimeout(()=>{toast('Achievement: '+a.icon+' '+a.name+' unlocked!','purple');burst(window.innerWidth-130,80,12);},400);
+    }
+  });
+  if(newU){save();setTimeout(rAch,600);}
+}
+
+// INIT
+const tn=todayNum();
+if(!ST.curDay)vDay=tn;
+setInterval(rCD,1000);
+rAll();
+</script>
+</body></html>

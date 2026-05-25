@@ -1,0 +1,1580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEET PG 2026 — Mission Under 1000</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0c10;
+    --surface: #111318;
+    --card: #161b24;
+    --border: #1e2535;
+    --gold: #d4a843;
+    --gold-dim: #a07c2a;
+    --green: #3ecf8e;
+    --green-dim: #1a5c3e;
+    --red: #e05c5c;
+    --blue: #4b9eff;
+    --text: #e8eaf0;
+    --muted: #6b7280;
+    --soft: #9ca3af;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, #0d1117 0%, #111827 50%, #0a0f1a 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 32px 40px 24px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(20px);
+  }
+  .header-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--gold);
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+  }
+  .header h1 span { color: var(--text); }
+  .header-sub {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 4px;
+    font-weight: 400;
+    font-family: 'DM Mono', monospace;
+  }
+  .countdown-box {
+    background: linear-gradient(135deg, var(--gold-dim), #7a5a18);
+    border: 1px solid var(--gold);
+    border-radius: 12px;
+    padding: 12px 20px;
+    text-align: center;
+    min-width: 140px;
+  }
+  .countdown-box .days {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 900;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .countdown-box .label {
+    font-size: 11px;
+    color: #c8a050;
+    font-family: 'DM Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 2px;
+  }
+
+  /* PROGRESS STRIP */
+  .progress-strip {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+  .progress-bar-wrap {
+    flex: 1;
+    min-width: 200px;
+    background: var(--border);
+    border-radius: 100px;
+    height: 8px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--green-dim), var(--green));
+    border-radius: 100px;
+    transition: width 0.5s ease;
+  }
+  .progress-stats {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .stat {
+    text-align: center;
+  }
+  .stat .val {
+    font-family: 'DM Mono', monospace;
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--green);
+  }
+  .stat .lab {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* TABS */
+  .tabs {
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+    scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 14px 18px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+  }
+  .tab-badge {
+    background: var(--border);
+    color: var(--soft);
+    border-radius: 100px;
+    padding: 1px 7px;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+  }
+  .tab-btn.active .tab-badge {
+    background: var(--gold-dim);
+    color: var(--gold);
+  }
+
+  /* MAIN LAYOUT */
+  .main {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 32px 40px;
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 28px;
+    align-items: start;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    position: sticky;
+    top: 180px;
+  }
+  .sidebar-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .sidebar-card h3 {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+  .subject-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .subject-btn {
+    background: none;
+    border: 1px solid transparent;
+    color: var(--soft);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    padding: 9px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.15s;
+    width: 100%;
+  }
+  .subject-btn:hover {
+    background: var(--border);
+    color: var(--text);
+    border-color: var(--border);
+  }
+  .subject-btn.active {
+    background: linear-gradient(135deg, #1a1f2e, #1e2535);
+    border-color: var(--gold-dim);
+    color: var(--gold);
+  }
+  .subject-pct {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .subject-btn.active .subject-pct { color: var(--gold-dim); }
+  .subj-mini-bar {
+    width: 100%;
+    height: 3px;
+    background: var(--border);
+    border-radius: 10px;
+    margin-top: 4px;
+    overflow: hidden;
+  }
+  .subj-mini-fill {
+    height: 100%;
+    background: var(--green);
+    border-radius: 10px;
+    transition: width 0.4s ease;
+  }
+
+  /* RESOURCE LINKS */
+  .resource-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--soft);
+    font-size: 12px;
+    transition: all 0.15s;
+    border: 1px solid transparent;
+  }
+  .resource-link:hover {
+    background: var(--border);
+    color: var(--blue);
+    border-color: var(--border);
+  }
+  .resource-link .ico {
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  /* CONTENT AREA */
+  .content { min-width: 0; }
+
+  /* SUBJECT HEADER */
+  .subject-header {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 28px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .subject-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .subject-header .meta {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .subject-progress-big {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .big-pct {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--green);
+  }
+  .reset-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.15s;
+  }
+  .reset-btn:hover {
+    border-color: var(--red);
+    color: var(--red);
+  }
+
+  /* TOPIC SECTIONS */
+  .section-group {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-header:hover { background: rgba(255,255,255,0.02); }
+  .section-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--gold-dim);
+    flex-shrink: 0;
+  }
+  .section-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .section-chevron {
+    color: var(--muted);
+    font-size: 12px;
+    transition: transform 0.2s;
+  }
+  .section-chevron.open { transform: rotate(180deg); }
+  .topics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2px;
+    padding: 8px;
+  }
+  .topic-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.12s;
+    border: 1px solid transparent;
+    position: relative;
+  }
+  .topic-item:hover {
+    background: rgba(255,255,255,0.03);
+    border-color: var(--border);
+  }
+  .topic-item.done {
+    opacity: 0.65;
+  }
+  .topic-item.done .topic-name {
+    text-decoration: line-through;
+    color: var(--muted);
+  }
+  .checkbox {
+    width: 18px;
+    height: 18px;
+    border-radius: 5px;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+  .topic-item.done .checkbox {
+    background: var(--green);
+    border-color: var(--green);
+  }
+  .checkmark {
+    color: #0a0c10;
+    font-size: 11px;
+    font-weight: 700;
+    display: none;
+  }
+  .topic-item.done .checkmark { display: block; }
+  .topic-name {
+    font-size: 13px;
+    color: var(--soft);
+    line-height: 1.3;
+    flex: 1;
+    transition: color 0.15s;
+  }
+  .topic-item:hover .topic-name { color: var(--text); }
+  .high-yield {
+    background: rgba(212,168,67,0.15);
+    border: 1px solid var(--gold-dim);
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-size: 9px;
+    font-family: 'DM Mono', monospace;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+  }
+
+  /* ROADMAP TAB */
+  .roadmap-container { }
+  .phase-block {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .phase-header {
+    padding: 20px 28px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .phase-number {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 900;
+    flex-shrink: 0;
+  }
+  .phase-title { font-size: 16px; font-weight: 600; color: var(--text); }
+  .phase-dates { font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; margin-top: 2px; }
+  .week-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1px;
+    background: var(--border);
+  }
+  .week-card {
+    background: var(--card);
+    padding: 20px;
+  }
+  .week-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+  .week-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 10px; }
+  .week-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .week-list li {
+    font-size: 12px;
+    color: var(--soft);
+    padding-left: 14px;
+    position: relative;
+    line-height: 1.5;
+  }
+  .week-list li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--gold-dim);
+    font-size: 10px;
+    top: 1px;
+  }
+  .week-list li.rest { color: var(--green-dim); }
+  .week-list li.test { color: var(--blue); }
+  .week-list li.rest::before, .week-list li.test::before { color: currentColor; }
+
+  /* RESOURCES TAB */
+  .resources-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+  }
+  .res-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px;
+  }
+  .res-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .res-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .res-card-header h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .res-card-header p {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 1px;
+  }
+  .res-link-list { display: flex; flex-direction: column; gap: 6px; }
+  .res-link-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--surface);
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.15s;
+    border: 1px solid transparent;
+  }
+  .res-link-item:hover {
+    border-color: var(--blue);
+    background: rgba(75,158,255,0.05);
+  }
+  .res-link-item .name {
+    font-size: 13px;
+    color: var(--text);
+    font-weight: 500;
+  }
+  .res-link-item .desc {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 1px;
+    line-height: 1.4;
+  }
+  .res-link-item .arrow {
+    color: var(--muted);
+    font-size: 12px;
+    margin-left: auto;
+    flex-shrink: 0;
+    margin-top: 2px;
+    transition: color 0.15s;
+  }
+  .res-link-item:hover .arrow { color: var(--blue); }
+  .free-tag {
+    background: rgba(62,207,142,0.15);
+    border: 1px solid var(--green-dim);
+    color: var(--green);
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+
+  /* PANEL visibility */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* EMPTY STATE */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+  }
+  .empty-state .icon { font-size: 48px; margin-bottom: 16px; }
+  .empty-state p { font-size: 14px; }
+
+  /* MARK ALL */
+  .mark-all-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.15s;
+  }
+  .mark-all-btn:hover { border-color: var(--green); color: var(--green); }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .main { grid-template-columns: 1fr; padding: 20px 16px; }
+    .sidebar { position: static; }
+    .header { padding: 20px 16px 16px; }
+    .tabs { padding: 0 16px; }
+    .header h1 { font-size: 22px; }
+    .resources-container { grid-template-columns: 1fr; }
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div>
+      <h1>NEET PG 2026 <span>— Mission Under 1000</span></h1>
+      <div class="header-sub">📅 Exam: 30 Aug 2026 &nbsp;·&nbsp; Syllabus Deadline: 15 Aug 2026 &nbsp;·&nbsp; 83 study days remaining</div>
+    </div>
+    <div class="countdown-box">
+      <div class="days" id="daysLeft">—</div>
+      <div class="label">Days to Exam</div>
+    </div>
+  </div>
+  <div class="progress-strip">
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="globalFill" style="width:0%"></div>
+    </div>
+    <div class="progress-stats">
+      <div class="stat"><div class="val" id="doneCount">0</div><div class="lab">Done</div></div>
+      <div class="stat"><div class="val" id="totalCount">0</div><div class="lab">Total</div></div>
+      <div class="stat"><div class="val" id="pctDone">0%</div><div class="lab">Progress</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('subjects')">📚 Subjects <span class="tab-badge" id="subjBadge">19</span></button>
+  <button class="tab-btn" onclick="showTab('roadmap')">🗺️ Roadmap</button>
+  <button class="tab-btn" onclick="showTab('resources')">🔗 Resources</button>
+</div>
+
+<!-- SUBJECTS TAB -->
+<div class="tab-panel active" id="tab-subjects">
+  <div class="main">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sidebar-card">
+        <h3>Subjects</h3>
+        <div class="subject-list" id="subjectList"></div>
+      </div>
+      <div class="sidebar-card">
+        <h3>Quick Links</h3>
+        <a href="https://www.prepladder.com" target="_blank" class="resource-link">🎓 PrepLadder</a>
+        <a href="https://www.marrowusmle.com" target="_blank" class="resource-link">🔬 Marrow</a>
+        <a href="https://dams.ac.in" target="_blank" class="resource-link">📖 DAMS</a>
+        <a href="https://www.drnajeeb.com" target="_blank" class="resource-link">🎥 Dr. Najeeb Lectures</a>
+        <a href="https://www.nbf.org.in" target="_blank" class="resource-link">📝 NBF Q Bank</a>
+      </div>
+    </div>
+    <!-- CONTENT -->
+    <div class="content" id="subjectContent"></div>
+  </div>
+</div>
+
+<!-- ROADMAP TAB -->
+<div class="tab-panel" id="tab-roadmap">
+  <div style="max-width:1100px;margin:0 auto;padding:32px 40px;">
+    <div id="roadmapContent"></div>
+  </div>
+</div>
+
+<!-- RESOURCES TAB -->
+<div class="tab-panel" id="tab-resources">
+  <div style="max-width:1100px;margin:0 auto;padding:32px 40px;">
+    <div class="resources-container" id="resourcesContent"></div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+const SUBJECTS = [
+  {
+    id: "anatomy",
+    name: "Anatomy",
+    color: "#e05c5c",
+    weightage: "~8%",
+    sections: [
+      { title: "General Anatomy & Histology", topics: [
+        { name: "Cell biology & tissues", hy: true }, { name: "Epithelium & glands", hy: true },
+        { name: "Cartilage & bone", hy: false }, { name: "Joints & their types", hy: false },
+        { name: "Muscle types & nerve supply", hy: true }, { name: "Embryology overview", hy: true }
+      ]},
+      { title: "Upper Limb", topics: [
+        { name: "Brachial plexus & injuries", hy: true }, { name: "Rotator cuff & shoulder", hy: true },
+        { name: "Cubital fossa contents", hy: false }, { name: "Carpal tunnel & hand", hy: true },
+        { name: "Dermatomes UL", hy: false }
+      ]},
+      { title: "Lower Limb", topics: [
+        { name: "Femoral triangle & canal", hy: true }, { name: "Popliteal fossa", hy: true },
+        { name: "Sciatic nerve & piriformis", hy: true }, { name: "Foot arches & flatfoot", hy: false },
+        { name: "Dermatomes LL", hy: false }
+      ]},
+      { title: "Thorax", topics: [
+        { name: "Heart borders & surfaces", hy: true }, { name: "Mediastinum & its contents", hy: true },
+        { name: "Lung segments (bronchopulmonary)", hy: true }, { name: "Diaphragm openings", hy: true },
+        { name: "Intercostal space", hy: false }
+      ]},
+      { title: "Abdomen & Pelvis", topics: [
+        { name: "Inguinal canal & hernia", hy: true }, { name: "Portal system & varices", hy: true },
+        { name: "Kidney relations & hilum", hy: true }, { name: "Uterus & ligaments", hy: true },
+        { name: "Pelvic floor muscles", hy: false }, { name: "Perineum & perineal body", hy: false }
+      ]},
+      { title: "Head & Neck", topics: [
+        { name: "Cranial nerves – all 12", hy: true }, { name: "Cavernous sinus", hy: true },
+        { name: "Parotid gland & facial nerve", hy: true }, { name: "Thyroid gland blood supply", hy: true },
+        { name: "Circle of Willis", hy: true }, { name: "Triangles of neck", hy: false }
+      ]},
+      { title: "Neuroanatomy", topics: [
+        { name: "Basal ganglia & circuits", hy: true }, { name: "Cerebellum connections", hy: true },
+        { name: "Internal capsule", hy: true }, { name: "Spinal cord tracts", hy: true },
+        { name: "CSF pathway & hydrocephalus", hy: true }
+      ]}
+    ]
+  },
+  {
+    id: "physiology",
+    name: "Physiology",
+    color: "#4b9eff",
+    weightage: "~9%",
+    sections: [
+      { title: "General Physiology", topics: [
+        { name: "Cell membrane & transport", hy: true }, { name: "Resting & action potential", hy: true },
+        { name: "Nerve conduction velocities", hy: false }, { name: "Synapse physiology", hy: true }
+      ]},
+      { title: "Blood & Immune", topics: [
+        { name: "Haemopoiesis & stem cells", hy: true }, { name: "Haemoglobin & O2 dissociation curve", hy: true },
+        { name: "Haemostasis & coagulation", hy: true }, { name: "Blood groups (ABO, Rh)", hy: true },
+        { name: "Immunity – innate & adaptive", hy: true }
+      ]},
+      { title: "CVS", topics: [
+        { name: "Cardiac cycle & JVP", hy: true }, { name: "ECG basics & intervals", hy: true },
+        { name: "Frank-Starling law", hy: true }, { name: "Cardiac output & Fick's principle", hy: true },
+        { name: "Microcirculation & oedema", hy: false }
+      ]},
+      { title: "Respiratory", topics: [
+        { name: "Lung volumes & capacities", hy: true }, { name: "V/Q ratio & shunts", hy: true },
+        { name: "CO2 transport & buffers", hy: true }, { name: "Hypoxia types", hy: true },
+        { name: "Surfactant & compliance", hy: false }
+      ]},
+      { title: "GIT", topics: [
+        { name: "GI hormones (CCK, Secretin, etc)", hy: true }, { name: "Gastric acid secretion", hy: true },
+        { name: "Bile secretion & enterohepatic circulation", hy: true }, { name: "Pancreatic secretion", hy: false }
+      ]},
+      { title: "Renal", topics: [
+        { name: "GFR & clearance", hy: true }, { name: "Tubular reabsorption (Glucose TM)", hy: true },
+        { name: "Renin-Angiotensin-Aldosterone", hy: true }, { name: "Acid-base regulation", hy: true },
+        { name: "ADH & collecting duct", hy: true }
+      ]},
+      { title: "Endocrine", topics: [
+        { name: "Insulin & glucagon", hy: true }, { name: "Thyroid hormones – synthesis", hy: true },
+        { name: "Adrenal cortex & medulla", hy: true }, { name: "Growth hormone & IGF-1", hy: false },
+        { name: "Calcium regulation & PTH", hy: true }
+      ]},
+      { title: "Neurophysiology", topics: [
+        { name: "Sleep stages & EEG", hy: true }, { name: "CSF formation & pressure", hy: true },
+        { name: "Reflexes & spinal cord", hy: false }, { name: "Special senses – eye/ear", hy: true }
+      ]}
+    ]
+  },
+  {
+    id: "biochemistry",
+    name: "Biochemistry",
+    color: "#a78bfa",
+    weightage: "~6%",
+    sections: [
+      { title: "Carbohydrate Metabolism", topics: [
+        { name: "Glycolysis & enzymes", hy: true }, { name: "TCA cycle & electron transport", hy: true },
+        { name: "Gluconeogenesis & regulation", hy: true }, { name: "Glycogen synthesis & degradation", hy: true },
+        { name: "HMP shunt", hy: true }
+      ]},
+      { title: "Lipid Metabolism", topics: [
+        { name: "Fatty acid synthesis & oxidation", hy: true }, { name: "Ketone bodies", hy: true },
+        { name: "Cholesterol synthesis (HMG CoA)", hy: true }, { name: "Lipoproteins (LDL, HDL, VLDL)", hy: true }
+      ]},
+      { title: "Protein & AA Metabolism", topics: [
+        { name: "Urea cycle & disorders", hy: true }, { name: "Essential amino acids", hy: false },
+        { name: "Phenylketonuria & inborn errors", hy: true }, { name: "One-carbon metabolism", hy: false }
+      ]},
+      { title: "Molecular Biology", topics: [
+        { name: "DNA replication & repair", hy: true }, { name: "Transcription & translation", hy: true },
+        { name: "PCR & blotting techniques", hy: true }, { name: "Oncogenes & tumor suppression", hy: true }
+      ]},
+      { title: "Vitamins & Minerals", topics: [
+        { name: "Fat-soluble vitamins (A,D,E,K)", hy: true }, { name: "Water-soluble vitamins", hy: true },
+        { name: "Coenzymes & their vitamins", hy: false }, { name: "Trace elements & deficiencies", hy: true }
+      ]}
+    ]
+  },
+  {
+    id: "pathology",
+    name: "Pathology",
+    color: "#f59e0b",
+    weightage: "~12%",
+    sections: [
+      { title: "General Pathology", topics: [
+        { name: "Cell injury & adaptations", hy: true }, { name: "Necrosis types & apoptosis", hy: true },
+        { name: "Inflammation – acute & chronic", hy: true }, { name: "Wound healing & repair", hy: true },
+        { name: "Amyloidosis", hy: true }, { name: "Haemodynamics & thrombosis", hy: true }
+      ]},
+      { title: "Neoplasia", topics: [
+        { name: "Hallmarks of cancer", hy: true }, { name: "Tumour markers (CEA, AFP, etc)", hy: true },
+        { name: "Spread & staging principles", hy: true }, { name: "Carcinogenesis mechanisms", hy: false }
+      ]},
+      { title: "Haematopathology", topics: [
+        { name: "Anaemia classification & micro", hy: true }, { name: "Leukaemia & lymphoma", hy: true },
+        { name: "Coagulation disorders", hy: true }, { name: "Myeloproliferative disorders", hy: false }
+      ]},
+      { title: "Systemic Pathology", topics: [
+        { name: "Cardiac pathology (MI, cardiomyopathy)", hy: true }, { name: "Renal pathology (GN, nephrosis)", hy: true },
+        { name: "Liver pathology (cirrhosis, hepatitis)", hy: true }, { name: "Lung pathology (pneumoconiosis, tumours)", hy: true },
+        { name: "GIT pathology (IBD, carcinoma)", hy: true }, { name: "CNS pathology (gliomas, demyelination)", hy: true },
+        { name: "Breast pathology", hy: true }, { name: "Endocrine tumours", hy: false }
+      ]}
+    ]
+  },
+  {
+    id: "pharmacology",
+    name: "Pharmacology",
+    color: "#34d399",
+    weightage: "~11%",
+    sections: [
+      { title: "General Pharmacology", topics: [
+        { name: "Pharmacokinetics (ADME)", hy: true }, { name: "Drug interactions & receptor types", hy: true },
+        { name: "Pharmacodynamics & dose-response", hy: true }
+      ]},
+      { title: "ANS Pharmacology", topics: [
+        { name: "Cholinergic drugs & anticholinergics", hy: true }, { name: "Adrenergic drugs & blockers", hy: true },
+        { name: "Neuromuscular blocking agents", hy: true }
+      ]},
+      { title: "CVS Drugs", topics: [
+        { name: "Antihypertensives – all classes", hy: true }, { name: "Antiarrhythmics (Vaughan-Williams)", hy: true },
+        { name: "Diuretics – MOA & uses", hy: true }, { name: "Anticoagulants & thrombolytics", hy: true },
+        { name: "Heart failure drugs", hy: true }
+      ]},
+      { title: "CNS Drugs", topics: [
+        { name: "Antiepileptics & MOA", hy: true }, { name: "Antidepressants & antipsychotics", hy: true },
+        { name: "Opioid analgesics & antagonists", hy: true }, { name: "General & local anaesthetics", hy: true },
+        { name: "Sedatives & benzodiazepines", hy: false }
+      ]},
+      { title: "Antimicrobials", topics: [
+        { name: "Penicillins & cephalosporins", hy: true }, { name: "Aminoglycosides & macrolides", hy: true },
+        { name: "Fluoroquinolones & tetracyclines", hy: true }, { name: "Antifungals & antivirals", hy: true },
+        { name: "Antimalarials & antitubercular", hy: true }
+      ]},
+      { title: "Endocrine & Others", topics: [
+        { name: "Insulin types & oral hypoglycaemics", hy: true }, { name: "Thyroid drugs", hy: false },
+        { name: "Corticosteroids – uses & ADR", hy: true }, { name: "NSAIDs & COX inhibitors", hy: true },
+        { name: "Anticancer drugs – MOA", hy: true }
+      ]}
+    ]
+  },
+  {
+    id: "microbiology",
+    name: "Microbiology",
+    color: "#f87171",
+    weightage: "~10%",
+    sections: [
+      { title: "General Microbiology", topics: [
+        { name: "Bacterial structure & staining", hy: true }, { name: "Culture media & identification", hy: true },
+        { name: "Sterilisation & disinfection", hy: true }, { name: "Normal flora", hy: false }
+      ]},
+      { title: "Bacteriology", topics: [
+        { name: "Gram positive cocci (Staph, Strep)", hy: true }, { name: "Gram negative bacilli (E. coli, Salmonella)", hy: true },
+        { name: "Mycobacteria (TB & leprosy)", hy: true }, { name: "Spirochaetes (syphilis, leptospira)", hy: true },
+        { name: "Anaerobes (Clostridium, Bacteroides)", hy: true }, { name: "Sexually transmitted infections", hy: true }
+      ]},
+      { title: "Virology", topics: [
+        { name: "DNA & RNA virus classification", hy: true }, { name: "Hepatitis viruses (A-E)", hy: true },
+        { name: "HIV structure, diagnosis & ARTs", hy: true }, { name: "Herpes viruses group", hy: true },
+        { name: "Dengue, Chikungunya, Zika", hy: true }, { name: "Rabies & rhabdovirus", hy: false }
+      ]},
+      { title: "Immunology", topics: [
+        { name: "Complement system", hy: true }, { name: "Hypersensitivity reactions (I–IV)", hy: true },
+        { name: "HLA antigens & diseases", hy: true }, { name: "Immunodeficiency disorders", hy: true },
+        { name: "Vaccines & schedule", hy: true }
+      ]},
+      { title: "Parasitology & Mycology", topics: [
+        { name: "Malaria – life cycle & treatment", hy: true }, { name: "Kala azar & trypanosomiasis", hy: true },
+        { name: "Intestinal nematodes & cestodes", hy: true }, { name: "Systemic mycoses (Candida, Aspergillus)", hy: true }
+      ]}
+    ]
+  },
+  {
+    id: "forensic",
+    name: "Forensic Medicine",
+    color: "#94a3b8",
+    weightage: "~5%",
+    sections: [
+      { title: "Death & Thanatology", topics: [
+        { name: "Rigor mortis, livor mortis, putrefaction", hy: true }, { name: "Time since death estimation", hy: true },
+        { name: "Sudden & unexplained deaths", hy: false }
+      ]},
+      { title: "Injuries & Wounds", topics: [
+        { name: "Abrasion, contusion, laceration", hy: true }, { name: "Gunshot & firearm injuries", hy: true },
+        { name: "Defence wounds & identification", hy: false }
+      ]},
+      { title: "Toxicology", topics: [
+        { name: "Organophosphate poisoning", hy: true }, { name: "Heavy metal poisoning (Pb, As, Hg)", hy: true },
+        { name: "Snake bites & venoms", hy: true }, { name: "Corrosive & irritant poisons", hy: false },
+        { name: "Alcohol – effects & methanol", hy: true }
+      ]},
+      { title: "Medical Jurisprudence", topics: [
+        { name: "MCI & ethics in medicine", hy: true }, { name: "Consent – types & importance", hy: true },
+        { name: "POCSO & domestic violence acts", hy: true }, { name: "Vital statistics & certificates", hy: false }
+      ]}
+    ]
+  },
+  {
+    id: "medicine",
+    name: "Medicine",
+    color: "#60a5fa",
+    weightage: "~14%",
+    sections: [
+      { title: "Cardiology", topics: [
+        { name: "IHD – STEMI, NSTEMI, UA", hy: true }, { name: "Heart failure – management", hy: true },
+        { name: "Arrhythmias & ECG interpretation", hy: true }, { name: "Valvular heart disease", hy: true },
+        { name: "Hypertension management", hy: true }, { name: "Cardiomyopathies", hy: false }
+      ]},
+      { title: "Respiratory", topics: [
+        { name: "COPD & asthma management", hy: true }, { name: "Pneumonia – CAP, HAP", hy: true },
+        { name: "TB – diagnosis & treatment", hy: true }, { name: "Pleural effusion & pneumothorax", hy: true },
+        { name: "Lung cancer", hy: true }, { name: "ILD & sarcoidosis", hy: false }
+      ]},
+      { title: "Gastroenterology", topics: [
+        { name: "Peptic ulcer disease & H. pylori", hy: true }, { name: "IBD – Crohn's & UC", hy: true },
+        { name: "Cirrhosis & portal hypertension", hy: true }, { name: "Hepatitis management", hy: true },
+        { name: "Malabsorption syndromes", hy: true }
+      ]},
+      { title: "Nephrology", topics: [
+        { name: "AKI – causes & management", hy: true }, { name: "CKD & ESRD", hy: true },
+        { name: "Glomerulonephritis types", hy: true }, { name: "RTA & fluid-electrolyte disorders", hy: true }
+      ]},
+      { title: "Endocrinology", topics: [
+        { name: "Diabetes mellitus – full management", hy: true }, { name: "Thyroid disorders & investigation", hy: true },
+        { name: "Adrenal disorders (Cushing's, Addison's)", hy: true }, { name: "Pituitary tumours", hy: false }
+      ]},
+      { title: "Haematology", topics: [
+        { name: "Iron deficiency & megaloblastic anaemia", hy: true }, { name: "Sickle cell disease & thalassaemia", hy: true },
+        { name: "Leukaemias & lymphomas", hy: true }, { name: "Bleeding disorders", hy: true }
+      ]},
+      { title: "Neurology", topics: [
+        { name: "Stroke – ischaemic & haemorrhagic", hy: true }, { name: "Epilepsy & status epilepticus", hy: true },
+        { name: "Meningitis & encephalitis", hy: true }, { name: "Parkinson's & movement disorders", hy: true }
+      ]}
+    ]
+  },
+  {
+    id: "surgery",
+    name: "Surgery",
+    color: "#fb923c",
+    weightage: "~12%",
+    sections: [
+      { title: "General Surgery", topics: [
+        { name: "Shock – types & fluid resuscitation", hy: true }, { name: "Burns – rule of 9s, management", hy: true },
+        { name: "Wound healing & sutures", hy: false }, { name: "Surgical infections & antibiotics", hy: true }
+      ]},
+      { title: "GIT Surgery", topics: [
+        { name: "Acute abdomen & appendicitis", hy: true }, { name: "Intestinal obstruction", hy: true },
+        { name: "Colorectal carcinoma & screening", hy: true }, { name: "Hernia – types & repair", hy: true },
+        { name: "Cholecystitis & cholelithiasis", hy: true }, { name: "Pancreatic cancer & pancreatitis", hy: true }
+      ]},
+      { title: "Breast & Thyroid", topics: [
+        { name: "Breast cancer staging & management", hy: true }, { name: "Benign breast disease", hy: false },
+        { name: "Thyroid swelling – investigation", hy: true }, { name: "Thyroid cancer types", hy: true }
+      ]},
+      { title: "Urology", topics: [
+        { name: "Renal calculi & management", hy: true }, { name: "BPH & carcinoma prostate", hy: true },
+        { name: "Bladder tumours", hy: false }, { name: "Scrotal swellings", hy: true }
+      ]},
+      { title: "Vascular & Orthopaedics", topics: [
+        { name: "Varicose veins & DVT", hy: true }, { name: "Peripheral vascular disease", hy: false },
+        { name: "Fracture basics & complications", hy: true }, { name: "Common orthopaedic syndromes", hy: true }
+      ]}
+    ]
+  },
+  {
+    id: "obgyn",
+    name: "OB/GYN",
+    color: "#f472b6",
+    weightage: "~10%",
+    sections: [
+      { title: "Obstetrics", topics: [
+        { name: "Normal labour & partogram", hy: true }, { name: "Antepartum haemorrhage (APH)", hy: true },
+        { name: "PPH – causes & management", hy: true }, { name: "Hypertensive disorders of pregnancy", hy: true },
+        { name: "Anaemia in pregnancy", hy: true }, { name: "Ectopic pregnancy", hy: true },
+        { name: "IUGR & fetal monitoring", hy: false }, { name: "Preterm labour management", hy: true }
+      ]},
+      { title: "Gynaecology", topics: [
+        { name: "Menstrual disorders & DUB", hy: true }, { name: "PCOS – features & management", hy: true },
+        { name: "Endometriosis", hy: true }, { name: "Fibroid uterus", hy: true },
+        { name: "Ovarian tumours & staging", hy: true }, { name: "Cervical cancer & Pap smear", hy: true },
+        { name: "Endometrial carcinoma", hy: true }
+      ]},
+      { title: "Contraception & Infertility", topics: [
+        { name: "OCP – types & contraindications", hy: true }, { name: "IUCD mechanism & complications", hy: false },
+        { name: "Infertility workup", hy: true }, { name: "Ovulation induction", hy: false }
+      ]}
+    ]
+  },
+  {
+    id: "pediatrics",
+    name: "Paediatrics",
+    color: "#a3e635",
+    weightage: "~8%",
+    sections: [
+      { title: "Neonatology", topics: [
+        { name: "Birth asphyxia & APGAR", hy: true }, { name: "Prematurity complications", hy: true },
+        { name: "Neonatal jaundice & bilirubin", hy: true }, { name: "Congenital heart diseases", hy: true }
+      ]},
+      { title: "Growth & Development", topics: [
+        { name: "Developmental milestones", hy: true }, { name: "PEM – Kwashiorkor vs Marasmus", hy: true },
+        { name: "Immunisation schedule", hy: true }, { name: "Vitamin deficiencies in children", hy: false }
+      ]},
+      { title: "Paediatric Diseases", topics: [
+        { name: "Childhood infections (measles, mumps, etc)", hy: true }, { name: "Meningitis in children", hy: true },
+        { name: "Nephrotic & nephritic syndrome", hy: true }, { name: "Paediatric tumours (Wilms, ALL)", hy: true },
+        { name: "Childhood epilepsy", hy: false }, { name: "Asthma in children", hy: false }
+      ]}
+    ]
+  },
+  {
+    id: "psychiatry",
+    name: "Psychiatry",
+    color: "#818cf8",
+    weightage: "~5%",
+    sections: [
+      { title: "Core Concepts", topics: [
+        { name: "Psychosis – schizophrenia criteria", hy: true }, { name: "Affective disorders (depression, mania)", hy: true },
+        { name: "Anxiety disorders & OCD", hy: true }, { name: "Personality disorders", hy: false }
+      ]},
+      { title: "Substance Use", topics: [
+        { name: "Alcohol dependence & withdrawal", hy: true }, { name: "Opioid dependence & treatment", hy: true },
+        { name: "CAGE questionnaire", hy: false }
+      ]},
+      { title: "Treatment", topics: [
+        { name: "Antipsychotics – typical & atypical", hy: true }, { name: "ECT – indications & complications", hy: true },
+        { name: "Cognitive behavioural therapy", hy: false }
+      ]}
+    ]
+  },
+  {
+    id: "ophthalmology",
+    name: "Ophthalmology",
+    color: "#22d3ee",
+    weightage: "~4%",
+    sections: [
+      { title: "Anterior Segment", topics: [
+        { name: "Corneal diseases & ulcers", hy: true }, { name: "Cataract types & surgery", hy: true },
+        { name: "Glaucoma – types & management", hy: true }, { name: "Uveitis & iritis", hy: false }
+      ]},
+      { title: "Posterior Segment & Others", topics: [
+        { name: "Retinal detachment", hy: true }, { name: "Diabetic retinopathy", hy: true },
+        { name: "Age-related macular degeneration", hy: false }, { name: "Strabismus & amblyopia", hy: true }
+      ]}
+    ]
+  },
+  {
+    id: "ent",
+    name: "ENT",
+    color: "#fb7185",
+    weightage: "~4%",
+    sections: [
+      { title: "Ear", topics: [
+        { name: "Otitis media – acute & chronic", hy: true }, { name: "Cholesteatoma", hy: true },
+        { name: "Hearing loss types & audiogram", hy: true }
+      ]},
+      { title: "Nose & Throat", topics: [
+        { name: "Epistaxis & management", hy: true }, { name: "Allergic rhinitis & sinusitis", hy: true },
+        { name: "Tonsillitis & peritonsillar abscess", hy: true }, { name: "Laryngeal carcinoma", hy: false },
+        { name: "Vocal cord palsy", hy: true }
+      ]}
+    ]
+  },
+  {
+    id: "radiology",
+    name: "Radiology",
+    color: "#67e8f9",
+    weightage: "~3%",
+    sections: [
+      { title: "Imaging Basics", topics: [
+        { name: "X-ray fundamentals & chest X-ray", hy: true }, { name: "CT scan – principles & uses", hy: true },
+        { name: "MRI – contraindications & physics", hy: true }, { name: "Ultrasound principles", hy: false }
+      ]},
+      { title: "Interventional & Nuclear", topics: [
+        { name: "Nuclear medicine – PET, SPECT", hy: true }, { name: "Radiation protection & dosimetry", hy: true },
+        { name: "Interventional radiology basics", hy: false }
+      ]}
+    ]
+  },
+  {
+    id: "dermatology",
+    name: "Dermatology",
+    color: "#fbbf24",
+    weightage: "~4%",
+    sections: [
+      { title: "Inflammatory & Infective", topics: [
+        { name: "Psoriasis – types & management", hy: true }, { name: "Eczema & contact dermatitis", hy: true },
+        { name: "Fungal infections of skin", hy: true }, { name: "Scabies & pediculosis", hy: false }
+      ]},
+      { title: "Systemic & Immune", topics: [
+        { name: "SLE – skin manifestations", hy: true }, { name: "Pemphigus & pemphigoid", hy: true },
+        { name: "Drug reactions (SJS, TEN)", hy: true }, { name: "Vitiligo & hyperpigmentation", hy: false }
+      ]},
+      { title: "Skin Tumours & STIs", topics: [
+        { name: "Melanoma ABCDE & staging", hy: true }, { name: "Syphilis stages & treatment", hy: true },
+        { name: "Leprosy – classification & treatment", hy: true }
+      ]}
+    ]
+  },
+  {
+    id: "psmcommunity",
+    name: "PSM / Community",
+    color: "#86efac",
+    weightage: "~7%",
+    sections: [
+      { title: "Epidemiology & Biostatistics", topics: [
+        { name: "Study designs – RCT, cohort, case-control", hy: true }, { name: "Measures of disease frequency", hy: true },
+        { name: "Sensitivity, specificity, PPV, NPV", hy: true }, { name: "Bias & confounding", hy: true },
+        { name: "Statistical tests – chi-square, t-test", hy: true }
+      ]},
+      { title: "Nutrition & Environment", topics: [
+        { name: "RDA & nutritional deficiencies", hy: true }, { name: "Air/water/food pollution", hy: false },
+        { name: "Occupational health hazards", hy: true }
+      ]},
+      { title: "Health Programmes", topics: [
+        { name: "National health programmes (RNTCP, NVBDCP)", hy: true }, { name: "Immunisation programme & cold chain", hy: true },
+        { name: "Reproductive & child health", hy: false }, { name: "Health indicators & MDGs/SDGs", hy: true }
+      ]},
+      { title: "Social & Family Medicine", topics: [
+        { name: "Family medicine – preventive care", hy: false }, { name: "Social determinants of health", hy: true },
+        { name: "Health education & behaviour change", hy: false }
+      ]}
+    ]
+  },
+  {
+    id: "anaesthesia",
+    name: "Anaesthesia",
+    color: "#c084fc",
+    weightage: "~3%",
+    sections: [
+      { title: "Core Concepts", topics: [
+        { name: "Pre-op assessment & ASA grading", hy: true }, { name: "General anaesthesia – induction agents", hy: true },
+        { name: "Volatile anaesthetics & MAC", hy: true }, { name: "Muscle relaxants – depolarising & non", hy: true },
+        { name: "Regional anaesthesia – spinal & epidural", hy: true }, { name: "Pain management & ladder", hy: false }
+      ]}
+    ]
+  },
+  {
+    id: "orthopaedics",
+    name: "Orthopaedics",
+    color: "#d1d5db",
+    weightage: "~3%",
+    sections: [
+      { title: "Trauma & Fractures", topics: [
+        { name: "Fracture healing & complications", hy: true }, { name: "Common fractures – Colles, NOF, etc", hy: true },
+        { name: "Compartment syndrome", hy: true }, { name: "Fat embolism & crush injury", hy: true }
+      ]},
+      { title: "Orthopaedic Conditions", topics: [
+        { name: "Osteoarthritis vs rheumatoid", hy: true }, { name: "Disc prolapse & sciatica", hy: true },
+        { name: "Bone tumours (osteosarcoma, Ewing's)", hy: true }, { name: "Congenital deformities (CTEV, DDH)", hy: false }
+      ]}
+    ]
+  }
+];
+
+const ROADMAP = [
+  {
+    phase: 1,
+    title: "Foundation Sprint",
+    color: "#d4a843",
+    bg: "rgba(212,168,67,0.1)",
+    dates: "25 May – 15 Jun 2026",
+    weeks: [
+      { label: "Week 1", title: "Anatomy + Physiology", date: "25–31 May",
+        items: ["Anatomy: Complete Upper Limb, Lower Limb, Thorax", "Physiology: General Physiology, Blood & CVS", "Do 30 Qs/day from PrepLadder Q-bank", "🟢 Sunday: REST + light revision"] },
+      { label: "Week 2", title: "Biochemistry + Physiology cont.", date: "1–7 Jun",
+        items: ["Biochemistry: Full syllabus (carbs, lipids, mol bio)", "Physiology: Respiratory, GIT, Renal", "Daily 40 Qs – anatomy + physio mixed", "🔵 Saturday: Full Mock Test #1 (analyse weak areas)"] },
+      { label: "Week 3", title: "Pathology (General)", date: "8–14 Jun",
+        items: ["General Pathology + Neoplasia", "Haematopathology start", "Daily Qs: 50/day – all subjects so far", "🟢 Sunday: REST + watch Marrow recap videos"] },
+    ]
+  },
+  {
+    phase: 2,
+    title: "High-Yield Clinical Phase",
+    color: "#4b9eff",
+    bg: "rgba(75,158,255,0.1)",
+    dates: "16 Jun – 13 Jul 2026",
+    weeks: [
+      { label: "Week 4", title: "Pathology (Systemic) + Microbiology", date: "15–21 Jun",
+        items: ["Systemic pathology: all organ systems", "Microbiology: General + Bacteriology", "50 Qs/day + 1 subject mock weekly", "🔵 Sunday: Mock Test #2"] },
+      { label: "Week 5", title: "Pharmacology — Major Push", date: "22–28 Jun",
+        items: ["Pharmacology: ALL chapters (highest yield)", "Micro: Virology + Immunology", "60 Qs/day — include Pharma PYQs", "🟢 Saturday: REST (you earned it)"] },
+      { label: "Week 6", title: "Medicine (Half)", date: "29 Jun – 5 Jul",
+        items: ["Medicine: Cardiology + Respiratory + GIT", "Forensic Medicine: Complete chapter", "60 Qs/day mixed", "🔵 Sunday: Full Mock Test #3"] },
+      { label: "Week 7", title: "Medicine (Rest) + Surgery (Start)", date: "6–12 Jul",
+        items: ["Medicine: Nephrology + Endo + Haematology + Neuro", "Surgery: General + GIT surgery", "70 Qs/day – focus on clinicals", "🔵 Saturday: Mock Test #4 (aim 60%+)"] },
+    ]
+  },
+  {
+    phase: 3,
+    title: "Clinical Specialties Blitz",
+    color: "#3ecf8e",
+    bg: "rgba(62,207,142,0.1)",
+    dates: "14 Jul – 4 Aug 2026",
+    weeks: [
+      { label: "Week 8", title: "Surgery (Rest) + OB/GYN", date: "13–19 Jul",
+        items: ["Surgery: Breast, Thyroid, Urology, Vascular", "OB/GYN: Full obstetrics", "70 Qs/day", "🔵 Sunday: Mock Test #5"] },
+      { label: "Week 9", title: "Paediatrics + Psychiatry + ENT", date: "20–26 Jul",
+        items: ["Paediatrics: Full chapter", "Psychiatry: Full chapter", "ENT: Full chapter", "75 Qs/day mixed specialties", "🔵 Saturday: Mock Test #6"] },
+      { label: "Week 10", title: "OB/GYN (GYN part) + Ophthalmology + Dermatology", date: "27 Jul – 2 Aug",
+        items: ["OB/GYN: Gynaecology chapter", "Ophthalmology: Complete", "Dermatology: Complete", "75 Qs/day + subject Qs", "🟢 Sunday: REST day – walk/meditate/music"] },
+      { label: "Week 11", title: "PSM + Radiology + Anaesthesia + Orthopaedics", date: "3–9 Aug",
+        items: ["PSM: Full epidemiology + programmes", "Radiology, Anaesthesia, Orthopaedics: All", "80 Qs/day", "🔵 Sunday: Full Mock Test #7 (aim 65%+)"] },
+    ]
+  },
+  {
+    phase: 4,
+    title: "Revision & Consolidation",
+    color: "#f59e0b",
+    bg: "rgba(245,158,11,0.1)",
+    dates: "5 Aug – 15 Aug 2026",
+    weeks: [
+      { label: "Week 12", title: "Rapid Revision — All Subjects", date: "10–15 Aug",
+        items: ["Day-wise: Revise 2 subjects/day using notes only", "Focus only on HIGH YIELD topics (marked HY)", "100 PYQ questions daily (NBF/Marrow PYQ)", "🔵 14 Aug: Grand Mock Test #8 (full 200Q)", "✅ 15 Aug: SYLLABUS COMPLETION DEADLINE"] },
+    ]
+  }
+];
+
+const RESOURCES = [
+  {
+    icon: "🎓", bg: "#1a2035", color: "#4b9eff",
+    title: "Video Lectures", subtitle: "Best platforms to study from",
+    links: [
+      { name: "Marrow", desc: "India's #1 NEET PG platform. Subject-wise videos, Q-bank, PYQs. Highly structured.", url: "https://marrow.in", free: false },
+      { name: "PrepLadder", desc: "Excellent faculty. Mnemonics, high-yield videos, notes, Q-bank.", url: "https://prepladder.com", free: false },
+      { name: "Dr. Najeeb Lectures", desc: "Best free anatomy, physiology, biochemistry lectures online. Extremely detailed.", url: "https://www.drnajeeb.com", free: true },
+      { name: "DAMS Medical", desc: "Free YouTube channel. Rapid revision videos. Subject-wise playlists.", url: "https://www.youtube.com/@damsmedical", free: true },
+      { name: "Medicovisual", desc: "Free YouTube. High-yield clinical medicine & surgery.", url: "https://www.youtube.com/@medicovisual", free: true }
+    ]
+  },
+  {
+    icon: "📝", bg: "#1a1a2e", color: "#a78bfa",
+    title: "Question Banks", subtitle: "Practise till it's automatic",
+    links: [
+      { name: "Marrow Q-Bank", desc: "Best NEET PG Q-bank. Subject-wise, difficulty filters, detailed explanations.", url: "https://marrow.in", free: false },
+      { name: "PrepLadder Q-Bank", desc: "Excellent explanations, topic-wise. Covers all subjects thoroughly.", url: "https://prepladder.com", free: false },
+      { name: "NBF (National Board Forum)", desc: "Free Q-bank with previous DNB/NEET PG questions. Must-use.", url: "https://www.nbf.org.in", free: true },
+      { name: "DAMS Test Series", desc: "Affordable test series + Q-bank. Good PYQ coverage.", url: "https://dams.ac.in", free: false },
+      { name: "TNPSC / PG Blazer", desc: "Free subject-wise MCQs online. Good for rapid practice.", url: "https://www.pgblazers.com", free: true }
+    ]
+  },
+  {
+    icon: "📜", bg: "#1a1f10", color: "#3ecf8e",
+    title: "PYQs with Solutions", subtitle: "Previous year questions are gold",
+    links: [
+      { name: "Marrow PYQ Module", desc: "Subject-wise PYQ with detailed solutions and recall tags.", url: "https://marrow.in", free: false },
+      { name: "DAMS PYQ PDFs", desc: "Downloadable PYQ PDFs with answer keys. Free on their website.", url: "https://dams.ac.in/free-material", free: true },
+      { name: "Across (by Marrow)", desc: "Free app with PYQ practice. Daily 10-Q challenges.", url: "https://play.google.com/store/apps/details?id=com.marrow.across", free: true },
+      { name: "MedExams.in", desc: "Free NEET PG / DNB PYQ repository with explanations.", url: "https://medexams.in", free: true }
+    ]
+  },
+  {
+    icon: "🏆", bg: "#1f1a10", color: "#d4a843",
+    title: "Mock Tests", subtitle: "Simulate the real exam",
+    links: [
+      { name: "Marrow Grand Tests", desc: "Best mock tests. 200 Qs. Detailed analysis with rank prediction.", url: "https://marrow.in", free: false },
+      { name: "PrepLadder Mock Tests", desc: "Subject-wise + full mock tests. Difficulty calibrated to NEET PG.", url: "https://prepladder.com", free: false },
+      { name: "DAMS Test Series", desc: "Affordable. Covers all subjects. Offline + online modes.", url: "https://dams.ac.in", free: false },
+      { name: "Lifespan / TestMyPrep", desc: "Free online NEET PG mock tests. Good for initial assessment.", url: "https://testmyprep.com", free: true }
+    ]
+  },
+  {
+    icon: "📖", bg: "#1f101a", color: "#f472b6",
+    title: "Standard Textbooks", subtitle: "For conceptual clarity",
+    links: [
+      { name: "Harrison's Principles (Medicine)", desc: "Standard reference for medicine. Use for conceptual clarity on mechanisms.", url: "https://accessmedicine.mhmedical.com", free: false },
+      { name: "Robbins Pathology", desc: "Gold standard for pathology concepts. Read Robbins Basic for NEET PG.", url: "https://www.elsevier.com", free: false },
+      { name: "Katzung Pharmacology", desc: "Best for pharmacology mechanisms and drug comparisons.", url: "https://accesspharmacy.mhmedical.com", free: false },
+      { name: "Snell's Clinical Anatomy", desc: "Best anatomy with clinical correlations. Use alongside videos.", url: "https://www.amazon.in", free: false }
+    ]
+  },
+  {
+    icon: "📱", bg: "#101a1f", color: "#22d3ee",
+    title: "Free Apps & Tools", subtitle: "Study smarter on your phone",
+    links: [
+      { name: "Across App (Marrow)", desc: "Free daily PYQ app. 10 questions/day. Excellent for daily warm-up.", url: "https://play.google.com/store/apps/details?id=com.marrow.across", free: true },
+      { name: "Anki Flashcards", desc: "Best spaced repetition flashcard app. Use pre-made NEET PG decks.", url: "https://apps.ankiweb.net", free: true },
+      { name: "NEET PG Anki Decks (r/medicalschoolanki)", desc: "Free community-made NEET PG Anki decks on Reddit.", url: "https://www.reddit.com/r/medicalschoolanki", free: true },
+      { name: "Osmosis (YouTube)", desc: "Free animated videos on pathophysiology. Excellent visuals.", url: "https://www.youtube.com/@osmosis", free: true }
+    ]
+  }
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let state = JSON.parse(localStorage.getItem('neetpg_state') || '{}');
+let activeSubject = SUBJECTS[0].id;
+
+function getKey(subjId, sIdx, tIdx) { return `${subjId}_${sIdx}_${tIdx}`; }
+function isDone(subjId, sIdx, tIdx) { return !!state[getKey(subjId, sIdx, tIdx)]; }
+function toggle(subjId, sIdx, tIdx) {
+  const k = getKey(subjId, sIdx, tIdx);
+  state[k] = !state[k];
+  localStorage.setItem('neetpg_state', JSON.stringify(state));
+  refreshAll();
+}
+
+function getSubjectStats(subj) {
+  let total = 0, done = 0;
+  subj.sections.forEach((sec, si) => sec.topics.forEach((_, ti) => { total++; if(isDone(subj.id,si,ti)) done++; }));
+  return { total, done, pct: total ? Math.round(done/total*100) : 0 };
+}
+function getGlobalStats() {
+  let total = 0, done = 0;
+  SUBJECTS.forEach(s => { const st = getSubjectStats(s); total += st.total; done += st.done; });
+  return { total, done, pct: total ? Math.round(done/total*100) : 0 };
+}
+
+// ============================================================
+// RENDER
+// ============================================================
+function refreshAll() {
+  updateGlobalProgress();
+  renderSidebar();
+  renderSubjectContent();
+}
+
+function updateGlobalProgress() {
+  const g = getGlobalStats();
+  document.getElementById('globalFill').style.width = g.pct + '%';
+  document.getElementById('doneCount').textContent = g.done;
+  document.getElementById('totalCount').textContent = g.total;
+  document.getElementById('pctDone').textContent = g.pct + '%';
+}
+
+function renderSidebar() {
+  const list = document.getElementById('subjectList');
+  list.innerHTML = SUBJECTS.map(s => {
+    const st = getSubjectStats(s);
+    return `<button class="subject-btn ${s.id===activeSubject?'active':''}" onclick="selectSubject('${s.id}')">
+      <div>
+        <div>${s.name}</div>
+        <div class="subj-mini-bar"><div class="subj-mini-fill" style="width:${st.pct}%"></div></div>
+      </div>
+      <span class="subject-pct">${st.pct}%</span>
+    </button>`;
+  }).join('');
+}
+
+function selectSubject(id) {
+  activeSubject = id;
+  renderSidebar();
+  renderSubjectContent();
+}
+
+let openSections = {};
+function toggleSection(key) {
+  openSections[key] = !openSections[key];
+  renderSubjectContent();
+}
+
+function renderSubjectContent() {
+  const subj = SUBJECTS.find(s => s.id === activeSubject);
+  if (!subj) return;
+  const st = getSubjectStats(subj);
+  const el = document.getElementById('subjectContent');
+
+  let html = `<div class="subject-header">
+    <div>
+      <h2>${subj.name}</h2>
+      <div class="meta">Weightage: ${subj.weightage} &nbsp;·&nbsp; ${st.done}/${st.total} topics done</div>
+    </div>
+    <div class="subject-progress-big">
+      <div class="big-pct">${st.pct}%</div>
+      <div>
+        <button class="mark-all-btn" onclick="markAll('${subj.id}', true)">Mark All ✓</button><br><br>
+        <button class="reset-btn" onclick="markAll('${subj.id}', false)">Reset</button>
+      </div>
+    </div>
+  </div>`;
+
+  subj.sections.forEach((sec, si) => {
+    const secKey = `${subj.id}_${si}`;
+    const isOpen = openSections[secKey] !== false; // default open
+    const doneSec = sec.topics.filter((_,ti) => isDone(subj.id,si,ti)).length;
+    html += `<div class="section-group">
+      <div class="section-header" onclick="toggleSection('${secKey}')">
+        <div class="section-title">
+          <div class="section-dot" style="background:${subj.color}"></div>
+          ${sec.title}
+        </div>
+        <div class="section-meta">
+          <span class="section-count">${doneSec}/${sec.topics.length}</span>
+          <span class="section-chevron ${isOpen?'open':''}">▼</span>
+        </div>
+      </div>`;
+    if (isOpen) {
+      html += `<div class="topics-grid">`;
+      sec.topics.forEach((topic, ti) => {
+        const done = isDone(subj.id, si, ti);
+        html += `<div class="topic-item ${done?'done':''}" onclick="toggle('${subj.id}',${si},${ti})">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <span class="topic-name">${topic.name}</span>
+          ${topic.hy ? '<span class="high-yield">HY</span>' : ''}
+        </div>`;
+      });
+      html += `</div>`;
+    }
+    html += `</div>`;
+  });
+
+  el.innerHTML = html;
+}
+
+function markAll(subjId, val) {
+  const subj = SUBJECTS.find(s => s.id === subjId);
+  subj.sections.forEach((sec, si) => sec.topics.forEach((_, ti) => {
+    state[getKey(subjId, si, ti)] = val;
+  }));
+  localStorage.setItem('neetpg_state', JSON.stringify(state));
+  refreshAll();
+}
+
+// ============================================================
+// ROADMAP
+// ============================================================
+function renderRoadmap() {
+  const container = document.getElementById('roadmapContent');
+  container.innerHTML = ROADMAP.map(phase => `
+    <div class="phase-block">
+      <div class="phase-header" style="background:${phase.bg}">
+        <div class="phase-number" style="background:${phase.bg};color:${phase.color};border:2px solid ${phase.color}">${phase.phase}</div>
+        <div>
+          <div class="phase-title" style="color:${phase.color}">Phase ${phase.phase}: ${phase.title}</div>
+          <div class="phase-dates">${phase.dates}</div>
+        </div>
+      </div>
+      <div class="week-grid">
+        ${phase.weeks.map(w => `
+          <div class="week-card">
+            <div class="week-label">${w.label} · ${w.date}</div>
+            <div class="week-title">${w.title}</div>
+            <ul class="week-list">
+              ${w.items.map(i => {
+                const cls = i.startsWith('🟢') ? 'rest' : i.startsWith('🔵') ? 'test' : '';
+                return `<li class="${cls}">${i}</li>`;
+              }).join('')}
+            </ul>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+// ============================================================
+// RESOURCES
+// ============================================================
+function renderResources() {
+  const container = document.getElementById('resourcesContent');
+  container.innerHTML = RESOURCES.map(cat => `
+    <div class="res-card">
+      <div class="res-card-header">
+        <div class="res-icon" style="background:${cat.bg};color:${cat.color}">${cat.icon}</div>
+        <div>
+          <h3>${cat.title}</h3>
+          <p>${cat.subtitle}</p>
+        </div>
+      </div>
+      <div class="res-link-list">
+        ${cat.links.map(l => `
+          <a href="${l.url}" target="_blank" class="res-link-item">
+            <div style="flex:1">
+              <div class="name">${l.name}${l.free ? '<span class="free-tag">FREE</span>' : ''}</div>
+              <div class="desc">${l.desc}</div>
+            </div>
+            <span class="arrow">↗</span>
+          </a>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+// ============================================================
+// TABS
+// ============================================================
+function showTab(tab) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  event.target.closest('.tab-btn').classList.add('active');
+}
+
+// ============================================================
+// COUNTDOWN
+// ============================================================
+function updateCountdown() {
+  const exam = new Date('2026-08-30');
+  const now = new Date();
+  const diff = Math.ceil((exam - now) / (1000 * 60 * 60 * 24));
+  document.getElementById('daysLeft').textContent = diff > 0 ? diff : 0;
+}
+
+// ============================================================
+// INIT
+// ============================================================
+updateCountdown();
+renderSidebar();
+renderSubjectContent();
+renderRoadmap();
+renderResources();
+</script>
+</body>
+</html>
